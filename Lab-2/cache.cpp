@@ -9,8 +9,10 @@ void Cache::initialize(CacheConfig *config) {
 }
 
 bool Cache::lookup(string address, int instr_num) {
-	int cache_line_num = get_index(address,config_->block_size_,config_->associativity_,config_->size_) ;
-	int tag = get_tag(address,config_->block_size_,config_->associativity_,config_->size_);
+	int cache_line_num = get_index(address, config_->block_size_,
+			config_->associativity_, config_->size_) ;
+	int tag = get_tag(address,config_->block_size_, config_->associativity_,
+			config_->size_);
 
 	vector<CacheBlock *> *cache_line = cache_lines_[cache_line_num];
 	if (cache_line == NULL) {
@@ -27,8 +29,10 @@ bool Cache::lookup(string address, int instr_num) {
 }
 
 void Cache::add(string address, int instr_num) {
-	int cache_line_num; // TODO: varun's code
-	int tag; // TODO: varun's code
+	int cache_line_num = get_index(address, config_->block_size_,
+			config_->associativity_, config_->size_) ;
+	int tag = get_tag(address, config_->block_size_, config_->associativity_,
+			config_->size_);
 
 	CacheBlock *cache_block;
 	vector<CacheBlock *> *cache_line = cache_lines_[cache_line_num];
@@ -65,6 +69,7 @@ CacheBlock* Cache::replace(vector<CacheBlock *> *cache_line) {
 	int lru, lfu;
 	switch(config_->replacement_policy_) {
 		case 1: // LRU
+			cout << "in lru " << endl;
 			cache_block = cache_line->at(0);
 			lru = cache_line->at(0)->last_used_;
 			for (int i = 1; i < cache_line->size(); ++i) {
@@ -90,4 +95,5 @@ CacheBlock* Cache::replace(vector<CacheBlock *> *cache_line) {
 			int index = rand() % (cache_line->size());
 			cache_block = cache_line->at(index);
 	}
+	return cache_block;
 }

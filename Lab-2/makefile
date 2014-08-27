@@ -1,6 +1,6 @@
 all: test
 test: test.cpp cache_manager.o
-	g++ test.cpp -o -g test
+	g++ test.cpp -g -o test
 cache_manager.o: cache_manager.cpp cache.h configuration.o logger.o cache.o
 	g++ -c cache_manager.cpp
 logger.o: logger.cpp 
