@@ -44,6 +44,6 @@ int main() {
 		cout<<b<<endl;
 		cout<<c<<endl;
         cache_manager->cache_list[0]->add(a,instr_num);
-        cout<<cache_manager->cache_list[0]->lookup(a,instr_num)<<endl; //Whatever has been added is looked up
+        cout<<cache_manager->cache_list[0]->lookup(a,instr_num,false)<<endl; //Whatever has been added is looked up
 	}
 }

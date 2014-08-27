@@ -23,7 +23,7 @@ void CacheManager::read(string address, int instr_num)
     int foundAt=config_->levels_;
     for(int i=0;i<config_->levels_;i++)
     {
-        if(cache_list[i]->lookup(address,instr_num))
+        if(cache_list[i]->lookup(address,instr_num,false))
         {
             foundAt=i;
             break;

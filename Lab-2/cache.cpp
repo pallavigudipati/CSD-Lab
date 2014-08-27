@@ -8,7 +8,7 @@ void Cache::initialize(CacheConfig *config) {
 	config_ = config;
 }
 
-bool Cache::lookup(string address, int instr_num) {
+bool Cache::lookup(string address, int instr_num, bool set_dirty) {
 	int cache_line_num = get_index(address, config_->block_size_,
 			config_->associativity_, config_->size_) ;
 	int tag = get_tag(address,config_->block_size_, config_->associativity_,
@@ -22,17 +22,21 @@ bool Cache::lookup(string address, int instr_num) {
 		if (!(cache_line->at(i)->empty_) && (cache_line->at(i)->tag_ == tag)) {
 			cache_line->at(i)->last_used_ = instr_num;
 			cache_line->at(i)->frequency_ += 1;
+			if (set_dirty) {
+				cache_line->at(i)->dirty_ = true;
+			}
 			return true;
 		}
 	}
 	return false;
 }
 
-void Cache::add(string address, int instr_num) {
+int Cache::add(string address, int instr_num) {
 	int cache_line_num = get_index(address, config_->block_size_,
 			config_->associativity_, config_->size_) ;
 	int tag = get_tag(address, config_->block_size_, config_->associativity_,
 			config_->size_);
+	int replaced_tag = 0;
 
 	CacheBlock *cache_block;
 	vector<CacheBlock *> *cache_line = cache_lines_[cache_line_num];
@@ -51,21 +55,25 @@ void Cache::add(string address, int instr_num) {
 	// You can add a new cache block. 
 	if (cache_line->size() < config_->associativity_) {
 		CacheBlock *new_block = new CacheBlock();
+		new_block->dirty_ = false;
+		new_block->empty_ = true;
 		cache_line->push_back(new_block);
 		// cache_lines_[cache_line_num] = cache_line; // TODO: required??
 		cache_block = new_block;
 	} else {
-		cache_block = replace(cache_line);
+		replaced_tag = replace(cache_line, cache_block);
 	}
 
 	cache_block->empty_ = false;
+	cache_block->dirty_ = false;
 	cache_block->tag_ = tag;
 	cache_block->last_used_ = instr_num;
 	cache_block->frequency_ = 1;
+
+	return replaced_tag;
 }
 
-CacheBlock* Cache::replace(vector<CacheBlock *> *cache_line) {
-	CacheBlock *cache_block;
+int Cache::replace(vector<CacheBlock *> *cache_line, CacheBlock *cache_block) {
 	int lru, lfu;
 	switch(config_->replacement_policy_) {
 		case 1: // LRU
@@ -95,5 +103,8 @@ CacheBlock* Cache::replace(vector<CacheBlock *> *cache_line) {
 			int index = rand() % (cache_line->size());
 			cache_block = cache_line->at(index);
 	}
-	return cache_block;
+	if (cache_block->dirty_) {
+		return cache_block->tag_;
+	}
+	return 0;
 }
