@@ -2,7 +2,7 @@
 #include <fstream>
 //#include "configuration.cpp"
 //#include "map_memory_location.cpp"
-//#include "cache2.h"
+//#include "cache.h"
 #include "cache_manager.cpp"
 using namespace std;
 

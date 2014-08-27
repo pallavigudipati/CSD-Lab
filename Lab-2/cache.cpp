@@ -8,9 +8,9 @@ void Cache::initialize(CacheConfig *config) {
 	config_ = config;
 }
 
-bool Cache::lookup(int address, int instr_num) {
-	int cache_line_num; //TODO: Insert Varun's Code
-	int tag; // TODO: varun's code
+bool Cache::lookup(string address, int instr_num) {
+	int cache_line_num = get_index(address,config_->block_size_,config_->associativity_,config_->size_) ;
+	int tag = get_tag(address,config_->block_size_,config_->associativity_,config_->size_);
 
 	vector<CacheBlock *> *cache_line = cache_lines_[cache_line_num];
 	if (cache_line == NULL) {
@@ -26,7 +26,7 @@ bool Cache::lookup(int address, int instr_num) {
 	return false;
 }
 
-void Cache::add(int address, int instr_num) {
+void Cache::add(string address, int instr_num) {
 	int cache_line_num; // TODO: varun's code
 	int tag; // TODO: varun's code
 

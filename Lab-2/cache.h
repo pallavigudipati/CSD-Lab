@@ -3,7 +3,7 @@
 #include <vector>
 #include "configuration.cpp"
 #include "logger.cpp"
-
+#include "map_memory_location.cpp"
 using namespace std;
 
 class CacheBlock {
@@ -17,7 +17,7 @@ class CacheBlock {
 class Cache {
   public:
 	CacheConfig *config_;
-	map<int, vector<CacheBlock *> > *cache_lines_;
+	map<int, vector<CacheBlock *> *> cache_lines_;
 	void initialize(CacheConfig *config);
 	bool lookup(string address,int instr_num);
 	void add(string address,int instr_num);

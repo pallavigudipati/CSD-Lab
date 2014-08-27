@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "cache.h"
+#include "cache.cpp"
 using namespace std;
 
 void CacheManager::initialize(Configuration *config)
