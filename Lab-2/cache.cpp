@@ -38,6 +38,7 @@ string Cache::add(const string address, int instr_num)
 		cout<<"Blah"<<endl;
 	}
 	string original_address=address; //address to be copied for block
+	bool constraint_replaced=false; //to check that if replace has occured, replaced address is returned correctly.
 	cout<<"Address at read entry"<<original_address<<endl;
 	int cache_line_num = get_index(address, config_->block_size_,
 			config_->associativity_, config_->size_) ;
@@ -63,7 +64,6 @@ string Cache::add(const string address, int instr_num)
 			cache_block->last_used_ = instr_num;
 			cache_block->frequency_ = 1;
 			cout<<"AssignedAddress:"<<original_address<<endl;
-			cout<<"ReplacedAddress:"<<replaced_address<<endl;
 			cache_block->address_=original_address; //Initialize address to return later in replace
 			return replaced_address;
 			//Varun added code ends
@@ -82,7 +82,12 @@ string Cache::add(const string address, int instr_num)
 		// cache_lines_[cache_line_num] = cache_line; // TODO: required??
 		cache_block = new_block;
 	} else {
-		replaced_address = replace(cache_line, cache_block);
+		replaced_address = replace(cache_line, &cache_block);
+		if(replaced_address.compare("")==0)
+		{
+			//The adddress returned should not be null
+			constraint_replaced=true;
+		}
 	}
 	if(cache_block==NULL)
 	{
@@ -100,43 +105,47 @@ string Cache::add(const string address, int instr_num)
 	cout<<"After empty assignment"<<original_address<<endl;
 	cache_block->frequency_ = 1;
 	cout<<"AssignedAddress:"<<original_address<<endl;
-	cout<<"ReplacedAddress:"<<replaced_address<<endl;
+	if(constraint_replaced)
+	{
+		cout<<"ReplacedAddress:"<<replaced_address<<endl;
+	}
 	cache_block->address_=original_address; //Initialize address to return later in replace
 	return replaced_address;
 }
 
-string Cache::replace(vector<CacheBlock *> *cache_line, CacheBlock *cache_block) {
+string Cache::replace(vector<CacheBlock *> *cache_line, CacheBlock **cache_block) {
 	int lru, lfu;
 	switch(config_->replacement_policy_) {
 		case 1: // LRU
 			cout << "in lru " << endl;
-			cache_block = cache_line->at(0);
+			*cache_block = cache_line->at(0);
 			lru = cache_line->at(0)->last_used_;
 			for (int i = 1; i < cache_line->size(); ++i) {
 				if (cache_line->at(i)->last_used_ < lru) {
 					lru = cache_line->at(i)->last_used_;
-					cache_block = cache_line->at(i);
+					*cache_block = cache_line->at(i);
 				}
 			}
 			break;
 
 		case 2: // LFU
-			cache_block = cache_line->at(0);
+			*cache_block = cache_line->at(0);
 			lfu = cache_line->at(0)->frequency_;
 			for (int i = 0; i < cache_line->size(); ++i) {
 				if (cache_line->at(i)->frequency_ < lfu) {
 					lfu = cache_line->at(i)->frequency_;
-					cache_block = cache_line->at(i);
+					*cache_block = cache_line->at(i);
 				}
 			}
 			break;
 		
 		case 3: // RR
 			int index = rand() % (cache_line->size());
-			cache_block = cache_line->at(index);
+			*cache_block = cache_line->at(index);
 	}
-	if (cache_block->dirty_) {
-		return cache_block->address_;
+	if ((*cache_block)->dirty_) {
+		cout<<"DirtyReplace"<<endl;
+		return (*cache_block)->address_;
 	}
 	return "";
 }

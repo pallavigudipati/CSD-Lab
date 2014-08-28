@@ -23,7 +23,7 @@ class Cache {
 	void initialize(CacheConfig *config);
 	bool lookup(string address,int instr_num, bool set_dirty);
 	string add(string address,int instr_num);
-	string replace(vector<CacheBlock *> *cache_line, CacheBlock *cache_block);
+	string replace(vector<CacheBlock *> *cache_line, CacheBlock **cache_block);
 };
 
 class CacheManager {
