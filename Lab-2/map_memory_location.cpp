@@ -5,6 +5,22 @@
 #include <bitset>
 using namespace std;
 //Converts a hex string to a 32-bit binary string
+/*
+int get_address_from(unsigned tag,unsigned index,int block_size,int associativity,int cache_size_KB)
+{
+	int cache_size=cache_size_KB*1024;
+	int block_offset_bits=ceil(log2(block_size));
+	int cache_lines=(cache_size)/(block_size*associativity);
+	int index_bits=ceil(log2(cache_lines));
+	int tag_bits=32-index_bits-block_offset_bits;
+	bitset<tag_bits> b_tag(tag);
+	bitset<index_bits> b_index(index);
+    bitset<block_offset_bits> b_block_offset(0);
+	string binary_address=b_tag.to_string()+b_index.to_string()+b_block_offset.to_string();
+	string hex_address="";
+	cout<<binary_address<<endl;
+	return binary_address<<endl
+}*/
 string get_binary_string(string mem_location)
 {
 	stringstream ss;
