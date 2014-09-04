@@ -64,4 +64,5 @@ int main() {
         cout<<cache_manager->cache_list[0]->lookup(a,instr_num,false)<<endl;*/ //Whatever has been added is looked up
 		instr_num+=1;
 	}
+	cache_manager->print_statistics();
 }

@@ -34,9 +34,11 @@ void CacheManager::read(string address, int instr_num)
         {
             foundAt=i;
 			logger_->num_cache_hits_[i]+=1;
+			logger_->num_accesses_[i]+=1;
             break;
         }
 		logger_->num_cache_misses_[i]+=1;
+		logger_->num_accesses_[i]+=1;
     }
     if(foundAt==0)
     {
@@ -81,6 +83,7 @@ void CacheManager::read(string address, int instr_num)
 			bool was_replaced=false;
 			string replaced_address=""; 
 			dirty_address=cache_list[i]->add(address,instr_num,was_replaced,replaced_address);
+			logger_->num_accesses_[i]+=1;
 			if(replaced_address.compare("")==0)
 			{
 				//Nothing was replaced, so no action to be done
@@ -100,6 +103,7 @@ void CacheManager::read(string address, int instr_num)
 				if(was_dirty)
 				{
 					bool looked_up=cache_list[i+1]->lookup(replaced_address,instr_num,true);
+					logger_->num_accesses_[i+1]+=1;
 					if(!looked_up)
 					{
 						//cout<<"Constraint violated"<<endl;
@@ -112,6 +116,7 @@ void CacheManager::read(string address, int instr_num)
 				//Since it is inclusive, it is guaranteed to be in the level (i+1)
 				bool looked_up=cache_list[i+1]->lookup(replaced_address,instr_num,true);
 				logger_->num_cache_misses_[i]+=1;
+				logger_->num_accesses_[i]+=1;
 				if(!looked_up)
 				{
 					//cout<<"Constraint violated write"<<endl;
@@ -136,9 +141,11 @@ void CacheManager::write_back(string address, int instr_num)
 		{
 			foundAt=i;
 			logger_->num_cache_hits_[i]+=1;
+			logger_->num_accesses_[i]+=1;
 			break;
 		}
 		logger_->num_cache_misses_[i]+=1;
+		logger_->num_accesses_[i]+=1;
 	}
 	//add the address to every closer level of cache
 	for(int i=0;i<foundAt;i++)
@@ -147,6 +154,7 @@ void CacheManager::write_back(string address, int instr_num)
 		bool was_replaced=false;
 		string replaced_address=""; 
 		dirty_address=cache_list[i]->add(address,instr_num,was_replaced,replaced_address);
+		logger_->num_accesses_[i]+=1;
 		if(replaced_address.compare("")==0)
 		{
 			//Nothing was replaced, so no action to be done
@@ -169,6 +177,7 @@ void CacheManager::write_back(string address, int instr_num)
 			if(was_dirty)
 			{
 				bool looked_up=cache_list[i+1]->lookup(replaced_address,instr_num,true);
+				logger_->num_accesses_[i+1]+=1;
 				if(!looked_up)
 				{
 					//cout<<"Constraint violated"<<endl;
@@ -181,7 +190,9 @@ void CacheManager::write_back(string address, int instr_num)
 			remove_inclusive(replaced_address,instr_num,i-1);
 			//Since it is inclusive, it is guaranteed to be in the level (i+1)
 			bool looked_up=cache_list[i+1]->lookup(replaced_address,instr_num,true);
+			logger_->num_accesses_[i+1]+=1;
 			logger_->num_cache_misses_[i]+=1;
+			logger_->num_accesses_[i+1]+=1;
 			if(!looked_up)
 			{
 				//cout<<"Constraint violated write"<<endl;
@@ -206,6 +217,7 @@ bool CacheManager::remove_inclusive(string address,int instr_num,int k)
 		//check if the address exists at this level, if not there's no need to go further down.
 		if(!cache_list[i]->lookup(address,instr_num,false))
 		{
+			logger_->num_accesses_[i]+=1;
 			break;
 		}
 		bool i_dirty = cache_list[i]->remove(address);
