@@ -58,7 +58,7 @@ bool Cache::remove(string address)
 		}
 	}
 	//If this happens, this means the assumptions made as to the presence of this address in the cache are violated
-	cout<<"Address Not Found In Cache"<<endl;
+	//cout<<"Address Not Found In Cache"<<endl;
 	return false;
 }
 string Cache::add(const string address, int instr_num,bool &was_replaced,string &with_address) 
@@ -108,7 +108,7 @@ string Cache::add(const string address, int instr_num,bool &was_replaced,string 
 	}
 	if(cache_block==NULL)
 	{
-		cout<<"NULL"<<endl;
+		//cout<<"NULL"<<endl;
 	}
 	//cache_block->address_=original_address;
 	cache_block->empty_ = false;
@@ -124,7 +124,7 @@ string Cache::replace(vector<CacheBlock *> *cache_line, CacheBlock **cache_block
 	int lru, lfu;
 	switch(config_->replacement_policy_) {
 		case 1: // LRU
-			cout << "in lru " << endl;
+			//cout << "in lru " << endl;
 			*cache_block = cache_line->at(0);
 			lru = cache_line->at(0)->last_used_;
 			for (int i = 1; i < cache_line->size(); ++i) {
@@ -152,7 +152,7 @@ string Cache::replace(vector<CacheBlock *> *cache_line, CacheBlock **cache_block
 	}
 	with_address=(*cache_block)->address_;
 	if ((*cache_block)->dirty_) {
-		cout<<"DirtyReplace"<<endl;
+		//cout<<"DirtyReplace"<<endl;
 		return (*cache_block)->address_;
 	}
 	return "";

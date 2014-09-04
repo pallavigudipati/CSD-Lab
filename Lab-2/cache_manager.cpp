@@ -18,7 +18,7 @@ void CacheManager::initialize_cache_list()
         cache_obj->initialize((config_->cache_configs_)[i]);
         cache_list.push_back(cache_obj);
     }
-    cout<<cache_list.size()<<endl;
+    //cout<<cache_list.size()<<endl;
 }
 void CacheManager::read(string address, int instr_num)
 {
@@ -97,7 +97,7 @@ void CacheManager::read(string address, int instr_num)
 					bool looked_up=cache_list[i+1]->lookup(replaced_address,instr_num,true);
 					if(!looked_up)
 					{
-						cout<<"Constraint violated"<<endl;
+						//cout<<"Constraint violated"<<endl;
 					}
 				}				
 			}
@@ -109,7 +109,7 @@ void CacheManager::read(string address, int instr_num)
 				logger_->num_cache_misses_[i]+=1;
 				if(!looked_up)
 				{
-					cout<<"Constraint violated write"<<endl;
+					//cout<<"Constraint violated write"<<endl;
 				}
 			}
 		
@@ -145,12 +145,12 @@ void CacheManager::write_back(string address, int instr_num)
 		if(replaced_address.compare("")==0)
 		{
 			//Nothing was replaced, so no action to be done
-			cout<<"Case 1"<<endl;
+			//cout<<"Case 1"<<endl;
 			continue;
 		}
 		else if(i+1>config_->levels_-1)
 		{
-			cout<<"Case 2"<<endl;
+			//cout<<"Case 2"<<endl;
 			remove_inclusive(replaced_address,instr_num,i-1);
 			//The previous level is memory, you need not write back
 			continue;		
@@ -159,27 +159,27 @@ void CacheManager::write_back(string address, int instr_num)
 		else if(dirty_address.compare("")==0)
 		{
 			//This means that the replaced block was not dirty
-			cout<<"Case 3"<<endl;
+			//cout<<"Case 3"<<endl;
 			bool was_dirty=remove_inclusive(replaced_address,instr_num,i-1);
 			if(was_dirty)
 			{
 				bool looked_up=cache_list[i+1]->lookup(replaced_address,instr_num,true);
 				if(!looked_up)
 				{
-					cout<<"Constraint violated"<<endl;
+					//cout<<"Constraint violated"<<endl;
 				}
 			}				
 		}
 		else
 		{
-			cout<<"Case 4"<<endl;
+			//cout<<"Case 4"<<endl;
 			remove_inclusive(replaced_address,instr_num,i-1);
 			//Since it is inclusive, it is guaranteed to be in the level (i+1)
 			bool looked_up=cache_list[i+1]->lookup(replaced_address,instr_num,true);
 			logger_->num_cache_misses_[i]+=1;
 			if(!looked_up)
 			{
-				cout<<"Constraint violated write"<<endl;
+				//cout<<"Constraint violated write"<<endl;
 			}
 		}
 		

@@ -14,15 +14,15 @@ int main() {
 
 	Configuration config;
 	config.ParseString(file);
-	cout << "Num levels " <<  config.levels_ << endl;
+	//cout << "Num levels " <<  config.levels_ << endl;
 	for (int i = 0; i < config.cache_configs_.size(); ++i) {
-		cout << "Level " << i << endl;
+		//cout << "Level " << i << endl;
 		CacheConfig *cache = config.cache_configs_[i];
-		cout << "Size " << cache->size_ << endl;
-		cout << "Assoc " << cache->associativity_ << endl;
-		cout << "Block Size " << cache->block_size_ << endl;
-		cout << "Latency " << cache->hit_latency_ << endl;
-		cout << "Policy " << cache->replacement_policy_ << endl;
+		//cout << "Size " << cache->size_ << endl;
+		//cout << "Assoc " << cache->associativity_ << endl;
+		//cout << "Block Size " << cache->block_size_ << endl;
+		//cout << "Latency " << cache->hit_latency_ << endl;
+		//cout << "Policy " << cache->replacement_policy_ << endl;
 	}
     //Create CacheManager object
     CacheManager* cache_manager=new CacheManager();
@@ -45,18 +45,18 @@ int main() {
 		//cout<<c<<endl;
 		if(b.compare("R")==0)
 		{
-			cout<<"READ"<<endl;
-			cout<<c<<endl;
-			cout<<"ENTER READ"<<endl;
+			//cout<<"READ"<<endl;
+			//cout<<c<<endl;
+			//cout<<"ENTER READ"<<endl;
 			cache_manager->read(c,instr_num);
-			cout<<"READ OVER"<<endl;
+			//cout<<"READ OVER"<<endl;
 		}
 		else
 		{
-			cout<<"WRITE"<<endl;
-			cout<<c<<endl;
+			//cout<<"WRITE"<<endl;
+			//cout<<c<<endl;
 			cache_manager->write_back(c,instr_num);
-			cout<<"WRITE OVER"<<endl;
+			//cout<<"WRITE OVER"<<endl;
 		}
 		//Code for testing individual cache
 		/*
