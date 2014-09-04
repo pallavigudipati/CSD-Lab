@@ -6,6 +6,7 @@
 using namespace std;
 
 int main() {
+	cout << "Size of the matrix" << endl;
 	int n;
 	cin >> n;
 
