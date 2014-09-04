@@ -20,6 +20,11 @@ void CacheManager::initialize_cache_list()
     }
     //cout<<cache_list.size()<<endl;
 }
+
+void CacheManager::print_statistics() {
+	logger_->print_log();
+}
+
 void CacheManager::read(string address, int instr_num)
 {
     int foundAt=config_->levels_;

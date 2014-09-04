@@ -20,10 +20,13 @@ class Cache {
   public:
 	CacheConfig *config_;
 	map<int, vector<CacheBlock *> *> cache_lines_;
+	
 	void initialize(CacheConfig *config);
 	bool lookup(string address,int instr_num, bool set_dirty);
-	string add(string address,int instr_num,bool& was_replaced,string &with_address);
-	string replace(vector<CacheBlock *> *cache_line, CacheBlock **cache_block,string &with_address);
+	string add(string address,int instr_num,bool& was_replaced,
+			string &with_address);
+	string replace(vector<CacheBlock *> *cache_line, CacheBlock **cache_block,
+			string &with_address);
 	bool remove(string address);
 };
 
@@ -32,8 +35,10 @@ class CacheManager {
         Configuration *config_;
         vector<Cache*> cache_list;
 		Logger *logger_;		
-        void initialize(Configuration *config);
+        
+		void initialize(Configuration *config);
         void initialize_cache_list();
+		void print_statistics();
 		void set_logger(Logger *logger);
         void read(string address, int instr_num);
 		void write_back(string address,int instr_num);
