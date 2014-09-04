@@ -40,10 +40,28 @@ int main() {
     int instr_num=0;
 	while(infile >> a >> b >> c)
 	{
-		cout<<a<<endl;
-		cout<<b<<endl;
-		cout<<c<<endl;
+		//cout<<a<<endl;
+		//cout<<b<<endl;
+		//cout<<c<<endl;
+		if(b.compare("R")==0)
+		{
+			cout<<"READ"<<endl;
+			cout<<c<<endl;
+			cout<<"ENTER READ"<<endl;
+			cache_manager->read(c,instr_num);
+			cout<<"READ OVER"<<endl;
+		}
+		else
+		{
+			cout<<"WRITE"<<endl;
+			cout<<c<<endl;
+			cache_manager->write_back(c,instr_num);
+			cout<<"WRITE OVER"<<endl;
+		}
+		//Code for testing individual cache
+		/*
         cache_manager->cache_list[0]->add(a,instr_num);
-        cout<<cache_manager->cache_list[0]->lookup(a,instr_num,false)<<endl; //Whatever has been added is looked up
+        cout<<cache_manager->cache_list[0]->lookup(a,instr_num,false)<<endl;*/ //Whatever has been added is looked up
+		instr_num+=1;
 	}
 }
