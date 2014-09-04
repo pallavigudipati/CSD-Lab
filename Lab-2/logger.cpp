@@ -29,5 +29,9 @@ class Logger {
 
 	void print_log() {
 		// TODO: print the required stuff.
+		for (int i = 0; i < num_cache_hits_.size(); ++i) {
+			cout << i << " " << num_cache_misses_[i] << " " 
+				<< num_cache_hits_[i] << endl;
+		}
 	}
 };
