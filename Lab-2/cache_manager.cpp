@@ -115,7 +115,7 @@ void CacheManager::read(string address, int instr_num)
 				remove_inclusive(replaced_address,instr_num,i-1);
 				//Since it is inclusive, it is guaranteed to be in the level (i+1)
 				bool looked_up=cache_list[i+1]->lookup(replaced_address,instr_num,true);
-				logger_->num_cache_misses_[i]+=1;
+				//logger_->num_cache_misses_[i]+=1;
 				logger_->num_accesses_[i]+=1;
 				if(!looked_up)
 				{
@@ -191,7 +191,7 @@ void CacheManager::write_back(string address, int instr_num)
 			//Since it is inclusive, it is guaranteed to be in the level (i+1)
 			bool looked_up=cache_list[i+1]->lookup(replaced_address,instr_num,true);
 			logger_->num_accesses_[i+1]+=1;
-			logger_->num_cache_misses_[i]+=1;
+			//logger_->num_cache_misses_[i]+=1;
 			logger_->num_accesses_[i+1]+=1;
 			if(!looked_up)
 			{
