@@ -4,6 +4,8 @@
 
 #define UPPER_LIMIT 10
 
+/** Multiplies two randomly generated n*n matrices, and stores the product
+ *  Takes size as input from stdin **/
 using namespace std;
 
 int main() {

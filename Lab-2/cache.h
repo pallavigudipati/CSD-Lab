@@ -6,6 +6,11 @@
 #include "map_memory_location.cpp"
 using namespace std;
 
+/** Defines the CacheBlock, Cache  and Cache Managerclasses. A cache consist    s of several
+ *  cache lines, each having atmost an associativity number of cache blocks
+ *  CacheBlocks need to store some attributes such as the dirty bit, the
+ *  last use for LRU etc. A cache manager iterates over the set of caches, 
+ *  utilizing the cache level operations defined in cache.cpp**/
 class CacheBlock {
   public:
   	bool empty_;

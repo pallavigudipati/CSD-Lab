@@ -4,6 +4,8 @@
 
 using namespace std;
 
+/** Defines functions for cache level operations. The cache manager will
+ * in turn use this functions on every cache in its set of caches **/
 void Cache::initialize(CacheConfig *config) {
 	config_ = config;
 }

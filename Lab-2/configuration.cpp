@@ -8,6 +8,8 @@
 
 using namespace std;
 
+/** Defines a configuration object which parses the config file
+ *  and initializes the config object **/
 class Configuration {
   public:
 	vector<CacheConfig *> cache_configs_;
