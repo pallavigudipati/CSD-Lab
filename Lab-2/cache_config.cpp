@@ -6,6 +6,9 @@ using namespace std;
 #define LFU 2;
 #define RR 3;
 
+/** Defines the cache configuration class. This holds the attributes
+ * of the cache which are known only at runtime from the input(in our case
+ * the config file) **/
 class CacheConfig {
   public:
 	int size_;

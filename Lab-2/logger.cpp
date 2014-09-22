@@ -2,11 +2,13 @@
 #include <vector>
 
 using namespace std;
-
+/** A logger object logs various types of memory accesses.
+ *  Each cache has its own logger which records the statistics for that
+ *  cache */
 class Logger {
   public:
 	vector<int> num_cache_hits_;
-	vector<int> num_cache_misses_; // TODO: required?
+	vector<int> num_cache_misses_;
 	vector<int> num_accesses_;
 
 	void initialize(int num_caches) {
@@ -28,7 +30,6 @@ class Logger {
 	}
 
 	void print_log() {
-		// TODO: print the required stuff.
 		for (int i = 0; i < num_cache_hits_.size(); ++i) {
 			cout << "Cache L" << i << " " << num_cache_misses_[i] << " "
 				<< num_cache_hits_[i] << " " << num_accesses_[i] << endl;
