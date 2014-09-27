@@ -17,5 +17,8 @@ public class Global {
 
     // Number of registers in ARF and RRF
     public static int NUM_REGISTERS = 8;
-    public static int NUM_RENAME_REGISTERS = 30; // TODO ??
+    public static int NUM_RENAME_REGISTERS = 8; // TODO ??
+
+    // Number of ALUs
+    public static int NUM_ALU = 2;
 }
