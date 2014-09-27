@@ -1,15 +1,17 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /*
  * Basic utilities class for the whole package.
  */
 public class Utils {
 
-    public List<Instruction> parseInstructions(String fileName) {
-        List<Instruction> instructions = new ArrayList<Instruction>();
+    public Queue<Instruction> parseInstructions(String fileName) {
+        Queue<Instruction> instructions = new LinkedList<Instruction>();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileName));
             String line = null;
