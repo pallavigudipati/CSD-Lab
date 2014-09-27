@@ -1,4 +1,6 @@
-
+/*
+ * A single instrction after it is parsed.
+ */
 public class Instruction {
     
     public class Address {

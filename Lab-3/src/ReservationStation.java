@@ -1,6 +1,9 @@
 import java.util.LinkedList;
 import java.util.List;
 
+/*
+ * Reservation Station.
+ */
 public class ReservationStation {
 
     public class Entry {

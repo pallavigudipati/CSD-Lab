@@ -1,7 +1,11 @@
-
+/*
+ * All the parameters that a user can input.
+ */
 public class Parameters {
 
+    /*
     public class Latency {
+        public
         public int add;
         public int sub;
         public int mul;
@@ -19,12 +23,13 @@ public class Parameters {
             this.or = or;
             this.xor = xor;
         }
-    }
+    }*/
 
     public int sizeOfRS; // Reservation Station
     public int sizeOfROB; // Re-order Buffer
     public int sizeOFSB; // Store Buffer
-    public Latency latency;
+    public int[] latency; // Can be accessed using Global.type
+    // public Latency latency;
 
     public Parameters(int sizeOfRS, int sizeOfROB, int sizeOfSB, int add,
             int sub, int mul, int div, int and, int or, int xor) {
@@ -32,6 +37,6 @@ public class Parameters {
         this.sizeOfROB = sizeOfROB;
         this.sizeOFSB = sizeOfSB;
 
-        this.latency = new Latency(add, sub, mul, div, and, or, xor);
+        this.latency = new int[]{add, sub, mul, div, and, or, xor};
     }
 }
