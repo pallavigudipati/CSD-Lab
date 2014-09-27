@@ -28,6 +28,7 @@ public class Parameters {
     public int sizeOfRS; // Reservation Station
     public int sizeOfROB; // Re-order Buffer
     public int sizeOFSB; // Store Buffer
+    public int sizeOFLB; //Load Buffer Size
     public int[] latency; // Can be accessed using Global.type
     // public Latency latency;
 
