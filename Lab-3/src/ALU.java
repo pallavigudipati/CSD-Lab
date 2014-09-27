@@ -12,6 +12,7 @@ public class ALU {
     private int startCycle = -1;
     private int operandA;
     private int operandB;
+    private int destinationRRFTag;
 
     public ALU(int[] latency, ARF arf) {
         this.latency = latency;
@@ -24,20 +25,20 @@ public class ALU {
 
     public int[] pushResult() {
         int result = computeResult();
-        int rrfTag = arf.registers[instruction.destination.value].tag;
-        arf.rrf.updateRegister(rrfTag, result);
+        arf.rrf.updateRegister(destinationRRFTag, result);
         reset();
-        return new int[] { rrfTag, result };
+        return new int[] { destinationRRFTag, result };
     }
 
     public void startExecution(Instruction instruction, int currentCycle, int operandA,
-            int operandB) {
+            int operandB, int destinationRRFTag) {
         this.busy = true;
         this.instruction = instruction;
         this.usageType = instruction.type;
         this.startCycle = currentCycle; // TODO: Not accounting for 0 latencies.
         this.operandA = operandA;
         this.operandB = operandB;
+        this.destinationRRFTag = destinationRRFTag;
     }
 
     public void reset() {

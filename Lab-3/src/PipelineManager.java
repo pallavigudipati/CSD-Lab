@@ -1,7 +1,5 @@
 import java.util.Queue;
 
-import javax.xml.bind.annotation.XmlElementDecl.GLOBAL;
-
 /*
  * Main class that manages the pipeline.
  */
@@ -49,8 +47,10 @@ public class PipelineManager {
                     ReservationStation.Entry entry = reservationStation.getFirstReadyEntry(); 
                     if (entry != null) {
                         // There is a ready entry in the reservation station.
-                        aluUnits[i].startExecution(entry.instruction, currentCycle,
-                                entry.operandA.tagOrValue, entry.operandB.tagOrValue);
+                        aluUnits[i].startExecution(entry.instruction,
+                                currentCycle, entry.operandA.tagOrValue,
+                                entry.operandB.tagOrValue,
+                                entry.destination.tagOrValue);
                     }
                 }
             }
@@ -60,13 +60,14 @@ public class PipelineManager {
             if (!reservationStation.isFull() && !reOrderBuffer.isFull() 
                     && !instructions.isEmpty()) {
                 Instruction instruction = instructions.peek();
+                int rrfTag = -1;
                 try {
-                    reservationStation.fillEntry(instruction);
+                    rrfTag = reservationStation.fillEntry(instruction);
                 } catch (RRFFullException e) {
                     currentCycle += 1;
                     continue;
                 }
-                reOrderBuffer.fillEntry(instruction);
+                reOrderBuffer.fillEntry(instruction, rrfTag);
                 instructions.poll();
             }
             currentCycle += 1;

@@ -68,7 +68,8 @@ public class ReservationStation {
             // TODO: For load and store
             if (instruction.destination.isRegister) {
                 if (arf.allocateRegister(instruction.destination.value)) {
-                    destination = new Operand(true, -1);
+                    destination = new Operand(true,
+                            arf.registers[instruction.destination.value].tag);
                 } else {
                     throw new RRFFullException("No empty registers.");
                 }
@@ -91,10 +92,12 @@ public class ReservationStation {
         return buffer.size() == maxLength;
     }
 
-    // The PipelineManager should check whether the Station is full or not.
-    public void fillEntry(Instruction instruction) throws RRFFullException {
+    // The PipelineManager should check whether the Station is full or not. Returns the RRFtag 
+    // for destination -> Used by re-order buffer.
+    public int fillEntry(Instruction instruction) throws RRFFullException {
         Entry entry = new Entry(instruction);
         buffer.add(entry);
+        return entry.destination.tagOrValue;
     }
 
     public void forward(int tag, int value) {
