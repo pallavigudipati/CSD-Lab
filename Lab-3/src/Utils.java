@@ -32,51 +32,28 @@ public class Utils {
         return instructions;
     }
 
-    public int getInstructionType(String command) 
-    {
-        
-    	if(command.equals("ADD"))
-    	{
-    		return 1;
-    	}
-    	else if(command.equals("SUB"))
-    	{
-    		return 2;
-    	}
-    	else if(command.equals("MUL"))
-    	{
-    		return 3;
-    	}
-    	else if(command.equals("DIV"))
-    	{
-    		return 4;
-    	}
-    	else if(command.equals("AND"))
-    	{
-    		return 5;
-    	}
-       	else if(command.equals("OR"))
-    	{
-    		return 6;
-    	}
-       	else if(command.equals("XOR"))
-    	{
-    		return 7;
-    	}
-       	else if(command.equals("STORE"))
-    	{
-    		return 8;
-    	}
-       	else if(command.equals("LOAD"))
-    	{
-    		return 9;
-    	}
-       	else
-       	{
-       		return -1;
-       	}
-
-        
+    public int getInstructionType(String command) {
+        if (command.equals("ADD")) {
+            return 1;
+        } else if (command.equals("SUB")) {
+            return 2;
+        } else if (command.equals("MUL")) {
+            return 3;
+        } else if (command.equals("DIV")) {
+            return 4;
+        } else if (command.equals("AND")) {
+            return 5;
+        } else if (command.equals("OR")) {
+            return 6;
+        } else if (command.equals("XOR")) {
+            return 7;
+        } else if (command.equals("STORE")) {
+            return 8;
+        } else if (command.equals("LOAD")) {
+            return 9;
+        } else {
+            return -1;
+        }
     }
 
     public void getOperand(String operand, Instruction.Address address) {
