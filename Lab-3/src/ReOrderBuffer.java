@@ -29,14 +29,14 @@ public class ReOrderBuffer {
         this.arf = arf;
     }
 
-    // Returns False if the buffer is full. 
-    public boolean fillEntry(Instruction instruction) {
-        if (buffer.size() == maxLength) {
-            return false;
-        }
+    public boolean isFull() {
+        return buffer.size() == maxLength;
+    }
+
+    // The PipelineManager has to check whether the buffer is full or not. 
+    public void fillEntry(Instruction instruction) {
         Entry entry = new Entry(instruction);
         buffer.add(entry);
-        return true;
     }
 
     public void completePending() {

@@ -14,6 +14,9 @@ public class ARF {
 
     public ARF(RRF rrf) {
         this.rrf = rrf;
+        for (int i = 0; i < registers.length; ++i) {
+            registers[i] = new Register();
+        }
     }
 
     // Returns {boolean, double} -> boolean: isValue, double: value or tag 

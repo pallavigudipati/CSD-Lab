@@ -47,36 +47,6 @@ void CacheManager::read(string address, int instr_num)
     }
     else
     {
-        //foundAt less than i(levels_ means value only present in Main Memory
-        //Code needs to be changed to handle write_back
-		/*
-		for(int i=0;i<foundAt;i++)
-		{
-			string replaced_address;
-			replaced_address=cache_list[i]->add(address,instr_num);
-			if(replaced_address.compare("")==0)
-			{
-				//Nothing was replaced, so no action to be done
-				continue;
-			}
-			else if(i+1>config_->levels_-1)
-			{
-				//The previous level is memory, you need not do anything
-				continue;		
-
-			}	
-			else
-			{
-				//Since it is inclusive, it is guaranteed to be in the level (i+1)
-				bool looked_up=cache_list[i+1]->lookup(replaced_address,instr_num,true);
-				if(!looked_up)
-				{
-					cout<<"Constraint violated read"<<endl;
-				}
-			}
-		
-		}
-		*/
 		for(int i=0;i<foundAt;i++)
 		{
 			string dirty_address;
@@ -227,7 +197,8 @@ bool CacheManager::remove_inclusive(string address,int instr_num,int k)
 		}
 	}
 	return was_dirty;
-}	
+}
+
 void CacheManager::set_logger(Logger *logger)
 {
 	logger_ = logger;

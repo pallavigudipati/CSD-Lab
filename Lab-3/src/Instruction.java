@@ -13,6 +13,8 @@ public class Instruction {
         }*/
     }
 
+    int startCycle;
+    int endCycle;
     int type;
     Address sourceA = new Address();
     Address sourceB = new Address();

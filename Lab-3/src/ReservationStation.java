@@ -25,13 +25,13 @@ public class ReservationStation {
         public Operand operandB;
         public Operand destination; // TODO: Operand C. How do we handle this.
 
-        public Entry(Instruction instruction) {
+        public Entry(Instruction instruction) throws RRFFullException {
             this.busy = true;
             this.instruction = instruction;
             setOperands();
         }
 
-        // WOnt be necessary if we are deleting the entry
+        // Wont be necessary if we are deleting the entry
         public void reset() {
             busy = false;
             ready = false;
@@ -47,7 +47,7 @@ public class ReservationStation {
             } 
         }
 
-        private void setOperands() {
+        private void setOperands() throws RRFFullException {
             // OperandA : doing both operands separately as it might differ for load and store.
             if (instruction.sourceA.isRegister) {
                 Object[] registerContents = arf.readRegister(instruction.sourceA.value);
@@ -64,15 +64,17 @@ public class ReservationStation {
                 operandB = new Operand(true, instruction.sourceB.value);
             }
             checkReady();
-            // TODO: Destination
-            /*
+
+            // TODO: For load and store
             if (instruction.destination.isRegister) {
-                
-                destination = 
+                if (arf.allocateRegister(instruction.destination.value)) {
+                    destination = new Operand(true, -1);
+                } else {
+                    throw new RRFFullException("No empty registers.");
+                }
             } else {
                 destination = new Operand(true, -1);
             }
-            */
         }
     }
 
@@ -85,14 +87,14 @@ public class ReservationStation {
         this.maxLength = maxLength;
     }
 
-    // return false if the reservation station is full.
-    public boolean fillEntry(Instruction instruction) {
-        if (buffer.size() == maxLength) {
-            return false;
-        }
+    public boolean isFull() {
+        return buffer.size() == maxLength;
+    }
+
+    // The PipelineManager should check whether the Station is full or not.
+    public void fillEntry(Instruction instruction) throws RRFFullException {
         Entry entry = new Entry(instruction);
         buffer.add(entry);
-        return true;
     }
 
     public void forward(int tag, int value) {
@@ -109,5 +111,15 @@ public class ReservationStation {
         }
     }
 
-    // TODO dispatch once ALU is written
+    // Returns null if no entry is ready. Also remove the entry from the Station.
+    public Entry getFirstReadyEntry() {
+        for (int i = 0; i < buffer.size(); ++i) {
+            if (buffer.get(i).ready) {
+                Entry entry = buffer.get(i);
+                buffer.remove(i);
+                return entry;
+            }
+        }
+        return null;
+    }
 }

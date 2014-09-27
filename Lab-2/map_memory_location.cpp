@@ -3,6 +3,7 @@
 #include <sstream>
 #include <cmath>
 #include <bitset>
+
 using namespace std;
 /** Defines functions for extracting the tag, the index(cache line number)
  * and the block offset from a memory location **/
@@ -16,6 +17,7 @@ string get_binary_string(string mem_location)
 	bitset<32> b(n);
 	return b.to_string();
 }
+
 //Gets the decimal value of a binary string. Convert mult to bit shift later, if there are problems.
 int get_decimal_value(string bin_string)
 {
@@ -28,6 +30,7 @@ int get_decimal_value(string bin_string)
 	}
 	return result;	
 }
+
 //Compute block_offset. We assume it is present in the last block_offset bits of the string
 int get_block_offset(string mem_location,int block_size)
 {
@@ -35,6 +38,7 @@ int get_block_offset(string mem_location,int block_size)
 	string bin_string=get_binary_string(mem_location);
 	return get_decimal_value(bin_string.substr(32-block_offset_bits,block_offset_bits));
 }
+
 int get_index(string mem_location,int block_size,int associativity,int cache_size_KB)
 {
 	int cache_size=cache_size_KB*1024;
@@ -44,6 +48,7 @@ int get_index(string mem_location,int block_size,int associativity,int cache_siz
 	int block_offset_bits=ceil(log2(block_size));
 	return get_decimal_value(bin_string.substr(32-block_offset_bits-index_bits,index_bits));
 }
+
 int get_tag(string mem_location,int block_size,int associativity,int cache_size_KB)
 {
 	int cache_size=cache_size_KB*1024;
@@ -53,6 +58,7 @@ int get_tag(string mem_location,int block_size,int associativity,int cache_size_
 	int block_offset_bits=ceil(log2(block_size));
 	return get_decimal_value(bin_string.substr(0,32-index_bits-block_offset_bits));
 }
+
 /*
 int main()
 {

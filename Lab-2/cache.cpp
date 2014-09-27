@@ -63,6 +63,7 @@ bool Cache::remove(string address)
 	//cout<<"Address Not Found In Cache"<<endl;
 	return false;
 }
+
 string Cache::add(const string address, int instr_num,bool &was_replaced,string &with_address) 
 {
 	was_replaced=false;
