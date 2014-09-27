@@ -23,10 +23,12 @@ public class ReservationStation {
         public Operand destination; // TODO: Operand C. How do we handle this.
 
         public Entry(Instruction instruction) {
+            this.busy = true;
             this.instruction = instruction;
             setOperands();
         }
 
+        // WOnt be necessary if we are deleting the entry
         public void reset() {
             busy = false;
             ready = false;
