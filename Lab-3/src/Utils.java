@@ -14,13 +14,14 @@ public class Utils {
             int sizeOfRS = Integer.parseInt(reader.readLine());
             int sizeOfROB = Integer.parseInt(reader.readLine());
             int sizeOfSB = Integer.parseInt(reader.readLine());
+            int sizeOfLB = Integer.parseInt(reader.readLine());
 
             int[] latency = new int[Global.MAX_OPERATIONS];
             for (int i = 0; i < Global.MAX_OPERATIONS; ++i) {
                 latency[i] = Integer.parseInt(reader.readLine());
             }
             reader.close();
-            return new Parameters(sizeOfRS, sizeOfROB, sizeOfSB, latency);
+            return new Parameters(sizeOfRS, sizeOfROB, sizeOfSB, sizeOfLB, latency);
         } catch (Exception e) {
             System.out.println("Not able to read files: " + fileName);
             e.printStackTrace();

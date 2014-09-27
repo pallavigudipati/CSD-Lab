@@ -24,5 +24,5 @@ public class Global {
     public static int NUM_ALU = 2;
     
     //Default value in a location in memory
-	static int MEM_DEFAULT_VALUE=5;
+	public static int MEM_DEFAULT_VALUE=5;
 }

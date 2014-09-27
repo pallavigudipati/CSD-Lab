@@ -27,15 +27,16 @@ public class Parameters {
 
     public int sizeOfRS; // Reservation Station
     public int sizeOfROB; // Re-order Buffer
-    public int sizeOFSB; // Store Buffer
-    public int sizeOFLB; //Load Buffer Size
+    public int sizeOfSB; // Store Buffer
+    public int sizeOfLB; //Load Buffer Size
     public int[] latency; // Can be accessed using Global.type
     // public Latency latency;
 
-    public Parameters(int sizeOfRS, int sizeOfROB, int sizeOfSB, int[] latency) {
+    public Parameters(int sizeOfRS, int sizeOfROB, int sizeOfSB, int sizeOfLB, int[] latency) {
         this.sizeOfRS = sizeOfRS;
         this.sizeOfROB = sizeOfROB;
-        this.sizeOFSB = sizeOfSB;
+        this.sizeOfSB = sizeOfSB;
+        this.sizeOfLB = sizeOfLB;
         this.latency = latency;
     }
 }
