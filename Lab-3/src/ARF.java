@@ -16,16 +16,22 @@ public class ARF {
         this.rrf = rrf;
     }
 
-    public double readRegister(int registerNum) {
+    // Returns {boolean, double} -> boolean: isValue, double: value or tag 
+    public Object[] readRegister(int registerNum) {
         Register register = registers[registerNum];
+        Object[] toReturn = new Object[2];
         if (!register.busy) {
-            return register.value;
+            toReturn[0] = true;
+            toReturn[1] = register.value;
         } else if (rrf.renameRegisters[register.tag].valid) {
-            return rrf.renameRegisters[register.tag].value;
+            toReturn[0] = true;
+            toReturn[1] = rrf.renameRegisters[register.tag].value;
         } else {
-            // TODO pass the tag to the reservation station.
-            return 0;
+            // Passes the tag to the reservation station.
+            toReturn[0] = false;
+            toReturn[1] = register.tag;
         }
+        return toReturn;
     }
 
     // Returns False if the allocation was not a success.
