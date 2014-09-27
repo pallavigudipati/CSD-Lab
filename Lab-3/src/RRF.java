@@ -6,9 +6,9 @@ public class RRF {
     public class RenameRegister {
         public boolean valid = false;
         public boolean busy = false;
-        public double value;
+        public int value;
 
-        public double reset() {
+        public int reset() {
             valid = false;
             busy = false;
             return value;
@@ -32,7 +32,7 @@ public class RRF {
         return -1; // RRF is full.
     }
 
-    public void updateRegister(int tag, double value) {
+    public void updateRegister(int tag, int value) {
         RenameRegister register = renameRegisters[tag];
         register.value = value;
         register.valid = true;

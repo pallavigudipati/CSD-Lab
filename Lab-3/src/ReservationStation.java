@@ -7,9 +7,9 @@ public class ReservationStation {
 
         public class Operand {
             public boolean valid = false;
-            public double tagOrValue;
+            public int tagOrValue;
 
-            public Operand(boolean valid, double tagOrValue) {
+            public Operand(boolean valid, int tagOrValue) {
                 this.valid = valid;
                 this.tagOrValue = tagOrValue;
             }
@@ -48,7 +48,7 @@ public class ReservationStation {
             // OperandA : doing both operands separately as it might differ for load and store.
             if (instruction.sourceA.isRegister) {
                 Object[] registerContents = arf.readRegister(instruction.sourceA.value);
-                operandA = new Operand((boolean) registerContents[0], (double) registerContents[1]);
+                operandA = new Operand((boolean) registerContents[0], (int) registerContents[1]);
             } else {
                 operandA = new Operand(true, instruction.sourceA.value);
             }
@@ -56,7 +56,7 @@ public class ReservationStation {
             // OperandB.
             if (instruction.sourceB.isRegister) {
                 Object[] registerContents = arf.readRegister(instruction.sourceB.value);
-                operandB = new Operand((boolean) registerContents[0], (double) registerContents[1]);
+                operandB = new Operand((boolean) registerContents[0], (int) registerContents[1]);
             } else {
                 operandB = new Operand(true, instruction.sourceB.value);
             }
@@ -92,7 +92,7 @@ public class ReservationStation {
         return true;
     }
 
-    public void forward(int tag, double value) {
+    public void forward(int tag, int value) {
         for (Entry entry : buffer) {
             if (!entry.operandA.valid && entry.operandA.tagOrValue == tag) {
                 entry.operandA.tagOrValue = value;
