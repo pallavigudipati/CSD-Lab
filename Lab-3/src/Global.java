@@ -1,5 +1,5 @@
 /*
- * All the global variables.
+ * All the global variables of this package.
  */
 public class Global {
     // ALU operations
