@@ -74,7 +74,7 @@ public class ReservationStation {
                     throw new RRFFullException("No empty registers.");
                 }
             } else {
-                destination = new Operand(true, -1);
+                destination = new Operand(true, instruction.destination.value);
             }
         }
     }
