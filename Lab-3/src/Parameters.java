@@ -32,12 +32,10 @@ public class Parameters {
     public int[] latency; // Can be accessed using Global.type
     // public Latency latency;
 
-    public Parameters(int sizeOfRS, int sizeOfROB, int sizeOfSB, int add,
-            int sub, int mul, int div, int and, int or, int xor) {
+    public Parameters(int sizeOfRS, int sizeOfROB, int sizeOfSB, int[] latency) {
         this.sizeOfRS = sizeOfRS;
         this.sizeOfROB = sizeOfROB;
         this.sizeOFSB = sizeOfSB;
-
-        this.latency = new int[]{add, sub, mul, div, and, or, xor};
+        this.latency = latency;
     }
 }

@@ -8,7 +8,27 @@ import java.util.Queue;
  */
 public class Utils {
 
-    public Queue<Instruction> parseInstructions(String fileName) {
+    public static Parameters parseParameters(String fileName) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            int sizeOfRS = Integer.parseInt(reader.readLine());
+            int sizeOfROB = Integer.parseInt(reader.readLine());
+            int sizeOfSB = Integer.parseInt(reader.readLine());
+
+            int[] latency = new int[Global.MAX_OPERATIONS];
+            for (int i = 0; i < Global.MAX_OPERATIONS; ++i) {
+                latency[i] = Integer.parseInt(reader.readLine());
+            }
+            reader.close();
+            return new Parameters(sizeOfRS, sizeOfROB, sizeOfSB, latency);
+        } catch (Exception e) {
+            System.out.println("Not able to read files: " + fileName);
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Queue<Instruction> parseInstructions(String fileName) {
         Queue<Instruction> instructions = new LinkedList<Instruction>();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileName));
@@ -32,31 +52,31 @@ public class Utils {
         return instructions;
     }
 
-    public int getInstructionType(String command) {
+    public static int getInstructionType(String command) {
         if (command.equals("ADD")) {
-            return 1;
+            return Global.ADD;
         } else if (command.equals("SUB")) {
-            return 2;
+            return Global.SUB;
         } else if (command.equals("MUL")) {
-            return 3;
+            return Global.MUL;
         } else if (command.equals("DIV")) {
-            return 4;
+            return Global.DIV;
         } else if (command.equals("AND")) {
-            return 5;
+            return Global.AND;
         } else if (command.equals("OR")) {
-            return 6;
+            return Global.OR;
         } else if (command.equals("XOR")) {
-            return 7;
+            return Global.XOR;
         } else if (command.equals("STORE")) {
-            return 8;
+            return Global.STORE;
         } else if (command.equals("LOAD")) {
-            return 9;
+            return Global.LOAD;
         } else {
             return -1;
         }
     }
 
-    public void getOperand(String operand, Instruction.Address address) {
+    public static void getOperand(String operand, Instruction.Address address) {
         if (operand.charAt(0) == 'R') {
             address.isRegister = true;
             address.value = Integer.parseInt(operand.substring(1));

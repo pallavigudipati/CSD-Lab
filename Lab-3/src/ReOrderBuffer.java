@@ -12,11 +12,11 @@ public class ReOrderBuffer {
         public int rrfTag = -1;
         public Instruction instruction;
 
-        public Entry(Instruction instruction) {
+        public Entry(Instruction instruction, int rrfTag) {
             this.busy = true;
             this.instruction = instruction;
             // TODO: what if destination is a mem address?
-            rrfTag = arf.registers[instruction.destination.value].tag;
+            this.rrfTag = rrfTag;
         }
     }
 
@@ -29,18 +29,18 @@ public class ReOrderBuffer {
         this.arf = arf;
     }
 
-    // Returns False if the buffer is full. 
-    public boolean fillEntry(Instruction instruction) {
-        if (buffer.size() == maxLength) {
-            return false;
-        }
-        Entry entry = new Entry(instruction);
+    public boolean isFull() {
+        return buffer.size() == maxLength;
+    }
+
+    // The PipelineManager has to check whether the buffer is full or not. 
+    public void fillEntry(Instruction instruction, int rrfTag) {
+        Entry entry = new Entry(instruction, rrfTag);
         buffer.add(entry);
-        return true;
     }
 
     public void completePending() {
-        while (arf.rrf.renameRegisters[buffer.peek().rrfTag].valid) {
+        while (buffer.peek() != null && arf.rrf.renameRegisters[buffer.peek().rrfTag].valid) {
             Entry entry = buffer.poll();
             arf.updateRegister(entry.instruction.destination.value, entry.rrfTag);
         }

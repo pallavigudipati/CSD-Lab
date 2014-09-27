@@ -3,21 +3,22 @@
  */
 public class Global {
     // ALU operations
-    public static int ADD = 1;
-    public static int SUB = 2;
-    public static int MUL = 3;
-    public static int DIV = 4;
-    public static int AND = 5;
-    public static int OR = 6;
-    public static int XOR = 7;
+    public final static int MAX_OPERATIONS = 7;
+    public final static int ADD = 1;
+    public final static int SUB = 2;
+    public final static int MUL = 3;
+    public final static int DIV = 4;
+    public final static int AND = 5;
+    public final static int OR = 6;
+    public final static int XOR = 7;
 
     // Load and Store
-    public static int STORE = 8;
-    public static int LOAD = 9;
+    public final static int STORE = 8;
+    public final static int LOAD = 9;
 
     // Number of registers in ARF and RRF
-    public static int NUM_REGISTERS = 8;
-    public static int NUM_RENAME_REGISTERS = 8; // TODO ??
+    public final static int NUM_REGISTERS = 8;
+    public final static int NUM_RENAME_REGISTERS = 8; // TODO ??
 
     // Number of ALUs
     public static int NUM_ALU = 2;

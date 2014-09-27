@@ -22,6 +22,12 @@ public class RRF {
 
     public RenameRegister[] renameRegisters = new RenameRegister[Global.NUM_RENAME_REGISTERS];
 
+    public RRF() {
+        for (int i = 0 ; i < renameRegisters.length; ++i) {
+            renameRegisters[i] = new RenameRegister();
+        }
+    }
+
     // TODO: should we maintain the first empty register name?
     public int findEmptyRegister() {
         for (int i = 0; i < Global.NUM_RENAME_REGISTERS; ++i) {

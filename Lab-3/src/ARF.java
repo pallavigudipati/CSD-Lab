@@ -6,7 +6,7 @@ public class ARF {
     public class Register {
         public boolean busy = false;
         public int tag = -1;
-        public int value;
+        public int value = 0;
     }
 
     public Register[] registers = new Register[Global.NUM_REGISTERS];
@@ -14,6 +14,9 @@ public class ARF {
 
     public ARF(RRF rrf) {
         this.rrf = rrf;
+        for (int i = 0; i < registers.length; ++i) {
+            registers[i] = new Register();
+        }
     }
 
     // Returns {boolean, double} -> boolean: isValue, double: value or tag 
