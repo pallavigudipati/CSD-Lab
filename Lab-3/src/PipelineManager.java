@@ -17,7 +17,7 @@ public class PipelineManager {
         reOrderBuffer = new ReOrderBuffer(arf, parameters.sizeOfROB);
         aluUnits = new ALU[Global.NUM_ALU];
         for (int i = 0; i < aluUnits.length; ++i) {
-            aluUnits[i] = new ALU(parameters.latency, arf);
+            aluUnits[i] = new ALU(parameters.latency, arf, i);
         }
     }
 
@@ -26,6 +26,7 @@ public class PipelineManager {
         // TODO: check termination condition
         while (!(reOrderBuffer.buffer.isEmpty() && reservationStation.buffer.isEmpty()
                 && instructions.isEmpty())) {
+            System.out.println("Cycle " + currentCycle);
             // Complete any pending tasks in Re-order buffer.
             reOrderBuffer.completePending();
 
@@ -51,6 +52,7 @@ public class PipelineManager {
                                 currentCycle, entry.operandA.tagOrValue,
                                 entry.operandB.tagOrValue,
                                 entry.destination.tagOrValue);
+                        System.out.println(entry.instruction.instructionId + ": Put into ALU " + i);
                     }
                 }
             }
@@ -69,6 +71,8 @@ public class PipelineManager {
                 }
                 reOrderBuffer.fillEntry(instruction, rrfTag);
                 instructions.poll();
+                System.out.println(instruction.instructionId + 
+                        ": Put into reservation station and ROB\n");
             }
             currentCycle += 1;
         }

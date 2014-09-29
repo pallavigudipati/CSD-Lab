@@ -1,5 +1,5 @@
 /*
- * A single instrction after it is parsed.
+ * A single instruction after it is parsed.
  */
 public class Instruction {
     
@@ -12,6 +12,8 @@ public class Instruction {
             this.value = value;
         }*/
     }
+
+    int instructionId; // Purely for the purpose of debugging.
 
     int startCycle;
     int endCycle;

@@ -2,6 +2,7 @@
  * Arithmetic Logic Unit
  */
 public class ALU {
+    public int aluId; // Purely for the purpose of debugging.
 
     public boolean busy = false;
     public Instruction instruction;
@@ -14,9 +15,10 @@ public class ALU {
     private int operandB;
     private int destinationRRFTag;
 
-    public ALU(int[] latency, ARF arf) {
+    public ALU(int[] latency, ARF arf, int aluId) {
         this.latency = latency;
         this.arf = arf;
+        this.aluId = aluId;
     }
 
     public boolean isReady(int currentCycle) {
@@ -42,6 +44,7 @@ public class ALU {
     }
 
     public void reset() {
+        System.out.println(this.instruction.instructionId + ": Removed for ALU " + aluId);
         usageType = -1;
         busy = false;
         startCycle = -1;

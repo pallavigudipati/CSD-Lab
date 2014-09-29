@@ -43,6 +43,7 @@ public class ReOrderBuffer {
         while (buffer.peek() != null && arf.rrf.renameRegisters[buffer.peek().rrfTag].valid) {
             Entry entry = buffer.poll();
             arf.updateRegister(entry.instruction.destination.value, entry.rrfTag);
+            System.out.println(entry.instruction.instructionId + ": Removed from ROB");
         }
     }
 }

@@ -34,6 +34,7 @@ public class Utils {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileName));
             String line = null;
+            int id = 0;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(" ");
                 Instruction instruction = new Instruction();
@@ -43,6 +44,8 @@ public class Utils {
                 if (!(type == Global.LOAD || type == Global.STORE)) {
                     getOperand(parts[3], instruction.sourceB);
                 }
+                instruction.instructionId = id;
+                id += 1;
                 instructions.add(instruction);
             }
             reader.close();
