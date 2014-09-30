@@ -14,7 +14,9 @@ public class PipelineManager {
         parameters = Utils.parseParameters("parameters.txt");
         arf = new ARF(new RRF());
         reservationStation = new ReservationStation(arf, parameters.sizeOfRS);
-        reOrderBuffer = new ReOrderBuffer(arf, parameters.sizeOfROB);
+        MemoryInterface memoryInterface = new MemoryInterface();
+        LoadStoreUnit loadStoreUnit = new LoadStoreUnit(arf,memoryInterface,parameters.sizeOfSB,parameters.sizeOfLB);
+        reOrderBuffer = new ReOrderBuffer(arf, parameters.sizeOfROB,loadStoreUnit);
         aluUnits = new ALU[Global.NUM_ALU];
         for (int i = 0; i < aluUnits.length; ++i) {
             aluUnits[i] = new ALU(parameters.latency, arf);
@@ -40,6 +42,11 @@ public class PipelineManager {
                 }
             }
 
+            //If there are load store instructions at the head of RS, send to ROB
+            if(!reOrderBuffer.isFull())
+            {
+            	
+            }
             // If an ALU is free, fetch and put from Reservation Station.
             for (int i = 0; i < Global.NUM_ALU; ++i) {
                 if (!aluUnits[i].busy) {

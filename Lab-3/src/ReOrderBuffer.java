@@ -23,10 +23,12 @@ public class ReOrderBuffer {
     public Queue<Entry> buffer = new LinkedList<Entry>();
     public int maxLength;
     public ARF arf;
+    public LoadStoreUnit loadStoreUnit;
 
-    public ReOrderBuffer(ARF arf, int maxLength) {
+    public ReOrderBuffer(ARF arf, int maxLength,LoadStoreUnit loadStoreUnit) {
         this.maxLength = maxLength;
         this.arf = arf;
+        this.loadStoreUnit = loadStoreUnit;
     }
 
     public boolean isFull() {
@@ -42,7 +44,24 @@ public class ReOrderBuffer {
     public void completePending() {
         while (buffer.peek() != null && arf.rrf.renameRegisters[buffer.peek().rrfTag].valid) {
             Entry entry = buffer.poll();
-            arf.updateRegister(entry.instruction.destination.value, entry.rrfTag);
+            if(entry.instruction.type==8)
+            {
+            	//Store Instruction
+            	loadStoreUnit.addStoreEntry(entry.instruction, 0, 0);
+            }
+            else if(entry.instruction.type==9)
+            {
+            	//Load Instruction
+            	//If there is nothing in the store queue with the same location, add to load
+            	if(!loadStoreUnit.isMatching(0))
+            	{
+            		loadStoreUnit.addLoadEntry(entry.instruction, 0, 0);
+            	}
+            }
+            else
+            {
+            	arf.updateRegister(entry.instruction.destination.value, entry.rrfTag);
+            }
         }
     }
 }
