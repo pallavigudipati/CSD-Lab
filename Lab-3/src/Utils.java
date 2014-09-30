@@ -38,10 +38,10 @@ public class Utils {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(" ");
                 Instruction instruction = new Instruction();
-                int type = getInstructionType(parts[0]);
+                instruction.type = getInstructionType(parts[0]);
                 getOperand(parts[1], instruction.destination);
                 getOperand(parts[2], instruction.sourceA);
-                if (!(type == Global.LOAD || type == Global.STORE)) {
+                if (!(instruction.type == Global.LOAD || instruction.type == Global.STORE)) {
                     getOperand(parts[3], instruction.sourceB);
                 }
                 instruction.instructionId = id;
@@ -83,7 +83,7 @@ public class Utils {
     public static void getOperand(String operand, Instruction.Address address) {
         if (operand.charAt(0) == 'R') {
             address.isRegister = true;
-            address.value = Integer.parseInt(operand.substring(1));
+            address.value = Integer.parseInt(operand.substring(1)) - 1;
         } else {
             address.isRegister = false;
             address.value = Integer.parseInt(operand);

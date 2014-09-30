@@ -26,7 +26,7 @@ public class PipelineManager {
         // TODO: check termination condition
         while (!(reOrderBuffer.buffer.isEmpty() && reservationStation.buffer.isEmpty()
                 && instructions.isEmpty())) {
-            System.out.println("Cycle " + currentCycle);
+            System.out.println("\nCycle " + currentCycle);
             // Complete any pending tasks in Re-order buffer.
             reOrderBuffer.completePending();
 
@@ -72,7 +72,7 @@ public class PipelineManager {
                 reOrderBuffer.fillEntry(instruction, rrfTag);
                 instructions.poll();
                 System.out.println(instruction.instructionId + 
-                        ": Put into reservation station and ROB\n");
+                        ": Put into reservation station and ROB");
             }
             currentCycle += 1;
         }
