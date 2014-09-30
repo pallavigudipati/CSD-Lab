@@ -19,7 +19,7 @@ public class PipelineManager {
         reOrderBuffer = new ReOrderBuffer(arf, parameters.sizeOfROB,loadStoreUnit);
         aluUnits = new ALU[Global.NUM_ALU];
         for (int i = 0; i < aluUnits.length; ++i) {
-            aluUnits[i] = new ALU(parameters.latency, arf);
+            aluUnits[i] = new ALU(parameters.latency, arf, i);
         }
     }
 
@@ -28,6 +28,7 @@ public class PipelineManager {
         // TODO: check termination condition
         while (!(reOrderBuffer.buffer.isEmpty() && reservationStation.buffer.isEmpty()
                 && instructions.isEmpty())) {
+            System.out.println("Cycle " + currentCycle);
             // Complete any pending tasks in Re-order buffer.
             reOrderBuffer.completePending();
 
@@ -43,10 +44,11 @@ public class PipelineManager {
             }
 
             //If there are load store instructions at the head of RS, send to ROB
+            /*
             if(!reOrderBuffer.isFull())
             {
             	
-            }
+            }*/
             // If an ALU is free, fetch and put from Reservation Station.
             for (int i = 0; i < Global.NUM_ALU; ++i) {
                 if (!aluUnits[i].busy) {
@@ -58,6 +60,7 @@ public class PipelineManager {
                                 currentCycle, entry.operandA.tagOrValue,
                                 entry.operandB.tagOrValue,
                                 entry.destination.tagOrValue);
+                        System.out.println(entry.instruction.instructionId + ": Put into ALU " + i);
                     }
                 }
             }
@@ -76,6 +79,8 @@ public class PipelineManager {
                 }
                 reOrderBuffer.fillEntry(instruction, rrfTag);
                 instructions.poll();
+                System.out.println(instruction.instructionId + 
+                        ": Put into reservation station and ROB\n");
             }
             currentCycle += 1;
         }
@@ -84,7 +89,11 @@ public class PipelineManager {
 
     public static void main(String[] args) {
         PipelineManager pipelineManager = new PipelineManager();
-        Queue<Instruction> instructions = Utils.parseInstructions("instructions.txt");
+        Queue<Instruction> instructions = Utils.parseInstructions("instructions_kartik.txt");
         pipelineManager.runPipeline(instructions);
+        for(int i=0;i<pipelineManager.arf.registers.length;i++)
+        {
+        	System.out.println("R"+i+" "+pipelineManager.arf.registers[i].value);
+        }
     }
 }

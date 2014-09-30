@@ -51,7 +51,7 @@ public class ReservationStation {
             // OperandA : doing both operands separately as it might differ for load and store.
             if (instruction.sourceA.isRegister) {
                 Object[] registerContents = arf.readRegister(instruction.sourceA.value);
-                operandA = new Operand((boolean) registerContents[0], (int) registerContents[1]);
+                operandA = new Operand((Boolean) registerContents[0], (Integer) registerContents[1]);
             } else {
                 operandA = new Operand(true, instruction.sourceA.value);
             }
@@ -59,7 +59,7 @@ public class ReservationStation {
             // OperandB.
             if (instruction.sourceB.isRegister) {
                 Object[] registerContents = arf.readRegister(instruction.sourceB.value);
-                operandB = new Operand((boolean) registerContents[0], (int) registerContents[1]);
+                operandB = new Operand((Boolean) registerContents[0], (Integer) registerContents[1]);
             } else {
                 operandB = new Operand(true, instruction.sourceB.value);
             }

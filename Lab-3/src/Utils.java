@@ -34,15 +34,28 @@ public class Utils {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileName));
             String line = null;
+            int id = 0;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(" ");
                 Instruction instruction = new Instruction();
                 int type = getInstructionType(parts[0]);
-                getOperand(parts[1], instruction.destination);
-                getOperand(parts[2], instruction.sourceA);
                 if (!(type == Global.LOAD || type == Global.STORE)) {
-                    getOperand(parts[3], instruction.sourceB);
+                    getOperand(parts[1], instruction.destination);
+                    getOperand(parts[2], instruction.sourceA);
+                    getOperand(parts[3], instruction.sourceB);                    
                 }
+                else if(type==Global.STORE)
+                {
+                    getOperand(parts[1], instruction.sourceA);
+                    getOperand(parts[2], instruction.sourceB);                	
+                }
+                else if(type==Global.LOAD)
+                {
+                    getOperand(parts[1], instruction.destination);
+                    getOperand(parts[2], instruction.sourceA);
+                }
+                instruction.instructionId = id;
+                id += 1;
                 instructions.add(instruction);
             }
             reader.close();

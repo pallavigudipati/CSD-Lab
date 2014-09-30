@@ -44,9 +44,12 @@ public class ReOrderBuffer {
     public void completePending() {
         while (buffer.peek() != null && arf.rrf.renameRegisters[buffer.peek().rrfTag].valid) {
             Entry entry = buffer.poll();
+            /*
             if(entry.instruction.type==8)
             {
             	//Store Instruction
+            	int memDestination = entry
+            	int memSource = entry.
             	loadStoreUnit.addStoreEntry(entry.instruction, 0, 0);
             }
             else if(entry.instruction.type==9)
@@ -60,8 +63,12 @@ public class ReOrderBuffer {
             }
             else
             {
-            	arf.updateRegister(entry.instruction.destination.value, entry.rrfTag);
-            }
+                arf.updateRegister(entry.instruction.destination.value, entry.rrfTag);
+                System.out.println(entry.instruction.instructionId + ": Removed from ROB");
+            }*/
+            arf.updateRegister(entry.instruction.destination.value, entry.rrfTag);
+            System.out.println(entry.instruction.instructionId + ": Removed from ROB");
+
         }
     }
 }
