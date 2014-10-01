@@ -96,8 +96,8 @@ public class PipelineManager {
 
     public static void main(String[] args) {
         PipelineManager pipelineManager = new PipelineManager();
-        //Queue<Instruction> instructions = Utils.parseInstructions("sample_program.txt");
-        Queue<Instruction> instructions = Utils.parseInstructions("sample_program_only_loadstore.txt");
+        Queue<Instruction> instructions = Utils.parseInstructions("sample_program.txt");
+        //Queue<Instruction> instructions = Utils.parseInstructions("sample_program_only_loadstore.txt");
         pipelineManager.runPipeline(instructions);
         for(int i=0;i<pipelineManager.arf.registers.length;i++)
         {
