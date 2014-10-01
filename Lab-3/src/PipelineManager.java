@@ -30,13 +30,19 @@ public class PipelineManager {
         while (!(reOrderBuffer.buffer.isEmpty() && reservationStation.buffer.isEmpty()
                 && instructions.isEmpty() && loadStoreUnit.IsEmpty())) {
             System.out.println("\nCycle " + currentCycle);
-            
+            /*
+            if(currentCycle>50)
+            {
+            	break;
+            }*/
             //Complete pending loads or stores
             loadStoreUnit.executeNext();
-            System.out.println("Completed Pending Loads and Stores");
+            //System.out.println("Completed Pending Loads and Stores");
             // Complete any pending tasks in Re-order buffer.
             reOrderBuffer.completePending();
-            System.out.println("Completed Pending ROB instructions");
+            //Send pending loads to the Load Queue of the Load Store Unit
+            reOrderBuffer.sendLoadsToLoadQueue();
+            //System.out.println("Completed Pending ROB instructions");
             // Check if ALUs are completed with their current work.
             for (int i = 0; i < Global.NUM_ALU; ++i) {
                 if (aluUnits[i].isReady(currentCycle)) {
@@ -47,7 +53,7 @@ public class PipelineManager {
                     reservationStation.forward(rrfTagResult[0], rrfTagResult[1]);
                 }
             }
-
+            reservationStation.removeReadyLoadStoreEntry();
             // If an ALU is free, fetch and put from Reservation Station.
             for (int i = 0; i < Global.NUM_ALU; ++i) {
                 if (!aluUnits[i].busy) {
@@ -90,11 +96,12 @@ public class PipelineManager {
 
     public static void main(String[] args) {
         PipelineManager pipelineManager = new PipelineManager();
-        Queue<Instruction> instructions = Utils.parseInstructions("instructions.txt");
+        Queue<Instruction> instructions = Utils.parseInstructions("sample_program_only_loadstore.txt");
         pipelineManager.runPipeline(instructions);
         for(int i=0;i<pipelineManager.arf.registers.length;i++)
         {
         	System.out.println("R"+i+" "+pipelineManager.arf.registers[i].value);
         }
+        pipelineManager.memoryInterface.printState();
     }
 }

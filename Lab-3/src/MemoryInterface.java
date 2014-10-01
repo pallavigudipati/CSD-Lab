@@ -19,5 +19,13 @@ public class MemoryInterface
 	{
 		MemoryStore.put(location, value);
 	}
-
+	public void printState()
+	{
+		System.out.println("-----Memory State Begin------");
+		for(Integer key:MemoryStore.keySet())
+		{
+			System.out.println("Location:"+key+"Value:"+MemoryStore.get(key));
+		}
+		System.out.println("-----Memory State End------");		
+	}
 }

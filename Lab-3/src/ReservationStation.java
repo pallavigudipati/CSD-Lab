@@ -120,6 +120,11 @@ public class ReservationStation {
     public int fillEntry(Instruction instruction) throws RRFFullException {
         Entry entry = new Entry(instruction);
         buffer.add(entry);
+        if(entry.instruction.type==Global.STORE)
+        {
+        	//In this case the destination tag is not used
+        	return -1;
+        }
         return entry.destination.tagOrValue;
     }
 
