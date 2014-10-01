@@ -15,7 +15,7 @@ public class MemoryInterface
 			return MemoryStore.get(location);
 		}		
 	}
-	public void writeLocation(int value,int location)
+	public void writeLocation(int location,int value)
 	{
 		MemoryStore.put(location, value);
 	}

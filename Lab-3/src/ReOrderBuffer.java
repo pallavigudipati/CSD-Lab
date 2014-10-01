@@ -61,8 +61,15 @@ public class ReOrderBuffer {
     	{
     		loadStoreUnit.addLoadEntry(entry.instruction, entry.rrfTag, loadSourceLocation);
     		System.out.println("Loads sent to Load Queue");
-    	} 
-    	//else part is the load forwarding part
+    	}
+    	else
+    	{
+    		//There is atleast one store to the same location in the store queue
+    		int loadSourceValue=loadStoreUnit.getMatching(loadSourceLocation);
+    		System.out.println("Forwarded");
+    		//Update the arf value and valid bit
+    		arf.rrf.updateRegister(entry.rrfTag, loadSourceValue);
+    	}
     }
     public void completePending() {
         while (buffer.peek() != null ) {
