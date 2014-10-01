@@ -7,6 +7,8 @@ public class Global {
 	public final static int ADD = 1;
 	public final static int SUB = 2;
 	public final static int MUL = 3;
+	
+	
 	public final static int DIV = 4;
 	public final static int AND = 5;
 	public final static int OR = 6;

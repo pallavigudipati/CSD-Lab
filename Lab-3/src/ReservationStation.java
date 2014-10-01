@@ -24,7 +24,6 @@ public class ReservationStation {
         public Operand operandA;
         public Operand operandB;
         public Operand destination; // TODO: Operand C. How do we handle this.
-
         public Entry(Instruction instruction) throws RRFFullException {
             this.busy = true;
             this.instruction = instruction;
@@ -41,10 +40,25 @@ public class ReservationStation {
             destination = null;
         }
 
-        public void checkReady() {
-            if (operandA.valid && operandB.valid) {
-                ready = true;
-            } 
+        public void checkReady() 
+        {
+        	if(instruction.type!=Global.LOAD)
+        	{
+        		if (operandA.valid && operandB.valid) {
+        			ready = true;
+        			instruction.valueA=operandA.tagOrValue;
+        			instruction.valueB=operandB.tagOrValue;
+        		}
+        	}
+        	else
+        	{
+        		//In the case of a LOAD, only one operand
+        		if(operandA.valid)
+        		{
+        			ready=true;
+        			instruction.valueA=operandA.tagOrValue;
+        		}
+        	}
         }
 
         private void setOperands() throws RRFFullException {
@@ -56,16 +70,25 @@ public class ReservationStation {
                 operandA = new Operand(true, instruction.sourceA.value);
             }
 
-            // OperandB.
-            if (instruction.sourceB.isRegister) {
-                Object[] registerContents = arf.readRegister(instruction.sourceB.value);
-                operandB = new Operand((Boolean) registerContents[0], (Integer) registerContents[1]);
-            } else {
-                operandB = new Operand(true, instruction.sourceB.value);
+            // OperandB. Not done for Loads
+            if(instruction.type!=Global.LOAD)
+            {
+            	if (instruction.sourceB.isRegister) {
+            		Object[] registerContents = arf.readRegister(instruction.sourceB.value);
+            		operandB = new Operand((Boolean) registerContents[0], (Integer) registerContents[1]);
+            	} else {
+            		operandB = new Operand(true, instruction.sourceB.value);
+            	}
             }
             checkReady();
 
             // TODO: For load and store
+            // Not done for stores
+            if(instruction.type==Global.STORE)
+            {
+            	//Don't go to the destination part
+            	return;
+            }
             if (instruction.destination.isRegister) {
                 if (arf.allocateRegister(instruction.destination.value)) {
                     destination = new Operand(true,
@@ -106,9 +129,12 @@ public class ReservationStation {
                 entry.operandA.tagOrValue = value;
                 entry.operandA.valid = true;
             }
-            if (!entry.operandB.valid && entry.operandB.tagOrValue == tag) {
-                entry.operandB.tagOrValue = value;
-                entry.operandB.valid = true;
+            if(entry.instruction.type!=Global.LOAD)
+            {
+            	if (!entry.operandB.valid && entry.operandB.tagOrValue == tag) {
+            		entry.operandB.tagOrValue = value;
+            		entry.operandB.valid = true;
+            	}
             }
             entry.checkReady();
         }
@@ -117,9 +143,24 @@ public class ReservationStation {
     // Returns null if no entry is ready. Also remove the entry from the Station.
     public Entry getFirstReadyEntry() {
         for (int i = 0; i < buffer.size(); ++i) {
-            if (buffer.get(i).ready) {
+        	boolean isLoadStore=(buffer.get(i).instruction.type==Global.LOAD) || (buffer.get(i).instruction.type==Global.STORE); 
+            if (buffer.get(i).ready && !isLoadStore) {
                 Entry entry = buffer.get(i);
                 buffer.remove(i);
+                entry.instruction.outOfRS=true;
+                return entry;
+            }
+        }
+        return null;
+    }
+    
+    public Entry removeReadyLoadStoreEntry() {
+        for (int i = 0; i < buffer.size(); ++i) {
+        	boolean isLoadStore=(buffer.get(i).instruction.type==Global.LOAD) || (buffer.get(i).instruction.type==Global.STORE); 
+            if (buffer.get(i).ready && isLoadStore) {
+                Entry entry = buffer.get(i);
+                buffer.remove(i);
+                entry.instruction.outOfRS=true;
                 return entry;
             }
         }

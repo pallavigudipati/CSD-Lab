@@ -38,21 +38,22 @@ public class Utils {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(" ");
                 Instruction instruction = new Instruction();
-                int type = getInstructionType(parts[0]);
-                if (!(type == Global.LOAD || type == Global.STORE)) {
+                instruction.type = getInstructionType(parts[0]);
+                if (!(instruction.type == Global.LOAD || instruction.type == Global.STORE)) 
+                {
+                    getOperand(parts[1], instruction.destination);
+                    getOperand(parts[2], instruction.sourceA);                	
+                    getOperand(parts[3], instruction.sourceB);
+                }
+                else if(instruction.type==Global.LOAD)
+                {
                     getOperand(parts[1], instruction.destination);
                     getOperand(parts[2], instruction.sourceA);
-                    getOperand(parts[3], instruction.sourceB);                    
                 }
-                else if(type==Global.STORE)
+                else if(instruction.type==Global.STORE)
                 {
                     getOperand(parts[1], instruction.sourceA);
                     getOperand(parts[2], instruction.sourceB);                	
-                }
-                else if(type==Global.LOAD)
-                {
-                    getOperand(parts[1], instruction.destination);
-                    getOperand(parts[2], instruction.sourceA);
                 }
                 instruction.instructionId = id;
                 id += 1;
@@ -93,7 +94,7 @@ public class Utils {
     public static void getOperand(String operand, Instruction.Address address) {
         if (operand.charAt(0) == 'R') {
             address.isRegister = true;
-            address.value = Integer.parseInt(operand.substring(1));
+            address.value = Integer.parseInt(operand.substring(1)) - 1;
         } else {
             address.isRegister = false;
             address.value = Integer.parseInt(operand);

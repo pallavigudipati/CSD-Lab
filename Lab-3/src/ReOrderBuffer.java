@@ -42,32 +42,44 @@ public class ReOrderBuffer {
     }
 
     public void completePending() {
-        while (buffer.peek() != null && arf.rrf.renameRegisters[buffer.peek().rrfTag].valid) {
-            Entry entry = buffer.poll();
-            /*
-            if(entry.instruction.type==8)
+        while (buffer.peek() != null ) {
+        	System.out.println("Peek loop");
+            Entry entry = buffer.peek();
+            if(entry.instruction.type==Global.STORE)
             {
+            	if(loadStoreUnit.StoreQueueIsFull() || !entry.instruction.outOfRS)
+            	{
+            		break;
+            	}
             	//Store Instruction
-            	int memDestination = entry
-            	int memSource = entry.
-            	loadStoreUnit.addStoreEntry(entry.instruction, 0, 0);
+            	entry=buffer.poll();
+            	int memDestination = entry.instruction.valueA;
+            	int memSourceValue = entry.instruction.valueB;
+            	loadStoreUnit.addStoreEntry(entry.instruction, memDestination, memSourceValue);
             }
-            else if(entry.instruction.type==9)
+            else if(entry.instruction.type==Global.LOAD && arf.rrf.renameRegisters[buffer.peek().rrfTag].valid)
             {
             	//Load Instruction
             	//If there is nothing in the store queue with the same location, add to load
+            	if(loadStoreUnit.LoadQueueIsFull())
+            	{
+            		break;
+            	}
+            	entry=buffer.poll();
+            	int loadSourceLocation=entry.instruction.valueA;
             	if(!loadStoreUnit.isMatching(0))
             	{
-            		loadStoreUnit.addLoadEntry(entry.instruction, 0, 0);
+            		loadStoreUnit.addLoadEntry(entry.instruction, entry.rrfTag, loadSourceLocation);
             	}
             }
-            else
+            else if(arf.rrf.renameRegisters[buffer.peek().rrfTag].valid)
             {
+            	entry=buffer.poll();
                 arf.updateRegister(entry.instruction.destination.value, entry.rrfTag);
                 System.out.println(entry.instruction.instructionId + ": Removed from ROB");
-            }*/
-            arf.updateRegister(entry.instruction.destination.value, entry.rrfTag);
-            System.out.println(entry.instruction.instructionId + ": Removed from ROB");
+            }
+            //arf.updateRegister(entry.instruction.destination.value, entry.rrfTag);
+            //System.out.println(entry.instruction.instructionId + ": Removed from ROB");
 
         }
     }

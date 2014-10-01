@@ -9,13 +9,14 @@ public class PipelineManager {
     public ReOrderBuffer reOrderBuffer;
     public ALU[] aluUnits;
     public Parameters parameters;
-
+    public MemoryInterface memoryInterface;
+    public LoadStoreUnit loadStoreUnit;
     public PipelineManager() {
         parameters = Utils.parseParameters("parameters.txt");
         arf = new ARF(new RRF());
         reservationStation = new ReservationStation(arf, parameters.sizeOfRS);
-        MemoryInterface memoryInterface = new MemoryInterface();
-        LoadStoreUnit loadStoreUnit = new LoadStoreUnit(arf,memoryInterface,parameters.sizeOfSB,parameters.sizeOfLB);
+        memoryInterface = new MemoryInterface();
+        loadStoreUnit = new LoadStoreUnit(arf,memoryInterface,parameters.sizeOfSB,parameters.sizeOfLB);
         reOrderBuffer = new ReOrderBuffer(arf, parameters.sizeOfROB,loadStoreUnit);
         aluUnits = new ALU[Global.NUM_ALU];
         for (int i = 0; i < aluUnits.length; ++i) {
@@ -27,11 +28,15 @@ public class PipelineManager {
         int currentCycle = 0;
         // TODO: check termination condition
         while (!(reOrderBuffer.buffer.isEmpty() && reservationStation.buffer.isEmpty()
-                && instructions.isEmpty())) {
-            System.out.println("Cycle " + currentCycle);
+                && instructions.isEmpty() && loadStoreUnit.IsEmpty())) {
+            System.out.println("\nCycle " + currentCycle);
+            
+            //Complete pending loads or stores
+            loadStoreUnit.executeNext();
+            System.out.println("Completed Pending Loads and Stores");
             // Complete any pending tasks in Re-order buffer.
             reOrderBuffer.completePending();
-
+            System.out.println("Completed Pending ROB instructions");
             // Check if ALUs are completed with their current work.
             for (int i = 0; i < Global.NUM_ALU; ++i) {
                 if (aluUnits[i].isReady(currentCycle)) {
@@ -43,12 +48,6 @@ public class PipelineManager {
                 }
             }
 
-            //If there are load store instructions at the head of RS, send to ROB
-            /*
-            if(!reOrderBuffer.isFull())
-            {
-            	
-            }*/
             // If an ALU is free, fetch and put from Reservation Station.
             for (int i = 0; i < Global.NUM_ALU; ++i) {
                 if (!aluUnits[i].busy) {
@@ -65,6 +64,8 @@ public class PipelineManager {
                 }
             }
 
+            //Remove ready load and store entries from the Reservation Station
+            //reservationStation.removeReadyLoadStoreEntry();
             // If either the Station or the ROB is full, the instruction is not dispatched.
             // Does not dispatch if no RRF register is empty for Destination.
             if (!reservationStation.isFull() && !reOrderBuffer.isFull() 
@@ -80,7 +81,7 @@ public class PipelineManager {
                 reOrderBuffer.fillEntry(instruction, rrfTag);
                 instructions.poll();
                 System.out.println(instruction.instructionId + 
-                        ": Put into reservation station and ROB\n");
+                        ": Put into reservation station and ROB");
             }
             currentCycle += 1;
         }
@@ -89,7 +90,7 @@ public class PipelineManager {
 
     public static void main(String[] args) {
         PipelineManager pipelineManager = new PipelineManager();
-        Queue<Instruction> instructions = Utils.parseInstructions("instructions_kartik.txt");
+        Queue<Instruction> instructions = Utils.parseInstructions("instructions.txt");
         pipelineManager.runPipeline(instructions);
         for(int i=0;i<pipelineManager.arf.registers.length;i++)
         {
