@@ -24,4 +24,5 @@ public class Instruction {
     int valueA=-1; //Filled up when the RS entry becomes ready
     int valueB=-1; //Filled up when the RS entry becomes ready
     boolean outOfRS=false;
+    boolean sentToLoadQueue = false;
 }

@@ -38,10 +38,13 @@ public class PipelineManager {
             //Complete pending loads or stores
             loadStoreUnit.runNextClockCycle();
             //System.out.println("Completed Pending Loads and Stores");
+            
             // Complete any pending tasks in Re-order buffer.
             reOrderBuffer.completePending();
+
             //Send pending loads to the Load Queue of the Load Store Unit
-            reOrderBuffer.sendLoadsToLoadQueue();
+            //reOrderBuffer.sendLoadsToLoadQueue();
+            reOrderBuffer.sendLoadsToLoadQueueOptimized();
             //System.out.println("Completed Pending ROB instructions");
             // Check if ALUs are completed with their current work.
             for (int i = 0; i < Global.NUM_ALU; ++i) {
@@ -96,8 +99,10 @@ public class PipelineManager {
 
     public static void main(String[] args) {
         PipelineManager pipelineManager = new PipelineManager();
-        Queue<Instruction> instructions = Utils.parseInstructions("sample_program.txt");
+        //Queue<Instruction> instructions = Utils.parseInstructions("instructions_kartik.txt");
         //Queue<Instruction> instructions = Utils.parseInstructions("sample_program_only_loadstore.txt");
+        //Queue<Instruction> instructions = Utils.parseInstructions("sample_program.txt");
+        Queue<Instruction> instructions = Utils.parseInstructions("onlyloadstores.txt");
         pipelineManager.runPipeline(instructions);
         for(int i=0;i<pipelineManager.arf.registers.length;i++)
         {
