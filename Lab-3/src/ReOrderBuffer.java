@@ -78,6 +78,10 @@ public class ReOrderBuffer {
                 arf.updateRegister(entry.instruction.destination.value, entry.rrfTag);
                 System.out.println(entry.instruction.instructionId + ": Removed from ROB");
             }
+            else
+            {
+            	break;
+            }
             //arf.updateRegister(entry.instruction.destination.value, entry.rrfTag);
             //System.out.println(entry.instruction.instructionId + ": Removed from ROB");
 
