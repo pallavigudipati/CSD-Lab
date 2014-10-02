@@ -56,6 +56,8 @@ public class PipelineManager {
                     reservationStation.forward(rrfTagResult[0], rrfTagResult[1]);
                 }
             }
+            
+            //remove Ready Loads and Stores from the reservation station
             reservationStation.removeReadyLoadStoreEntry();
             // If an ALU is free, fetch and put from Reservation Station.
             for (int i = 0; i < Global.NUM_ALU; ++i) {
@@ -73,8 +75,7 @@ public class PipelineManager {
                 }
             }
 
-            //Remove ready load and store entries from the Reservation Station
-            //reservationStation.removeReadyLoadStoreEntry();
+
             // If either the Station or the ROB is full, the instruction is not dispatched.
             // Does not dispatch if no RRF register is empty for Destination.
             if (!reservationStation.isFull() && !reOrderBuffer.isFull() 
