@@ -18,24 +18,35 @@ public class Cache {
             this.isEmpty = false;
             this.cacheBlock.changeState(blockNumber);
         }
-
-        public void remove() {
-            
-        }
     }
 
     public CacheLine[] cacheLines = new CacheLine[Globals.cacheSize];
 
-    public void insert(int blockNumber) {
-        if (cacheLines[blockNumber].isEmpty) {
-            cacheLines[blockNumber].initialize(blockNumber);
-        } else {
-            cacheLines[blockNumber].remove();
-        }
+    public void insert(int cacheLineNumber, int blockNumber) {
+        cacheLines[cacheLineNumber].initialize(blockNumber);
     }
 
-    // A call from Bus.
-    public void update(int blockNumber) {
+    public void remove(int cacheLineNumber) {
         
+    }
+
+    // Updates state.
+    public void updateState(int blockNumber, int action, int source) {
+        
+    }
+
+    public void fetch(int blockNumber) {
+        int cacheLineNumber = Utils.getCacheLineNumber(blockNumber);
+        CacheLine cacheLine = cacheLines[cacheLineNumber];
+        if (!cacheLine.isEmpty && cacheLine.cacheBlock.blockNumber == blockNumber) {
+            return;
+        }
+        // Fetch cache block.
+        if (!cacheLine.isEmpty) {
+            // If occupied, remove the block.
+            remove(cacheLineNumber);
+        }
+        // Insert new block.
+        insert(cacheLineNumber, blockNumber);
     }
 }
