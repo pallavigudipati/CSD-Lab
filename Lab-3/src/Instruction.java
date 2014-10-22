@@ -21,4 +21,8 @@ public class Instruction {
     Address sourceA = new Address();
     Address sourceB = new Address();
     Address destination = new Address();
+    int valueA=-1; //Filled up when the RS entry becomes ready
+    int valueB=-1; //Filled up when the RS entry becomes ready
+    boolean outOfRS=false;
+    boolean sentToLoadQueue = false;
 }

@@ -39,10 +39,21 @@ public class Utils {
                 String[] parts = line.split(" ");
                 Instruction instruction = new Instruction();
                 instruction.type = getInstructionType(parts[0]);
-                getOperand(parts[1], instruction.destination);
-                getOperand(parts[2], instruction.sourceA);
-                if (!(instruction.type == Global.LOAD || instruction.type == Global.STORE)) {
+                if (!(instruction.type == Global.LOAD || instruction.type == Global.STORE)) 
+                {
+                    getOperand(parts[1], instruction.destination);
+                    getOperand(parts[2], instruction.sourceA);                	
                     getOperand(parts[3], instruction.sourceB);
+                }
+                else if(instruction.type==Global.LOAD)
+                {
+                    getOperand(parts[1], instruction.destination);
+                    getOperand(parts[2], instruction.sourceA);
+                }
+                else if(instruction.type==Global.STORE)
+                {
+                    getOperand(parts[1], instruction.sourceA);
+                    getOperand(parts[2], instruction.sourceB);                	
                 }
                 instruction.instructionId = id;
                 id += 1;
