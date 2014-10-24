@@ -1,10 +1,10 @@
 
 public class Processor {
-    public int debugId; // Used purely for debugging purposes.
+    public int debugId; // Used purely for debugging purposes and to report statistics.
+    public Cache cache;
 
-    public Cache cache = new Cache();
-
-    public Processor(int debugId) {
+    public Processor(Logger logger, int debugId) {
+        this.cache = new Cache(logger, debugId);
         this.debugId = debugId;
     }
 
@@ -13,6 +13,6 @@ public class Processor {
     }
 
     public void write(int blockNumber) {
-          cache.write(blockNumber);
+        cache.write(blockNumber);
     }
 }
