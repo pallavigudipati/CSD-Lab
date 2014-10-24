@@ -6,8 +6,9 @@ public class Bus {
 
     public Logger logger;
     // List of all the Caches listening.
-    public List<Cache> caches = new ArrayList<Cache>();
     public int protocolType;
+
+    private List<Cache> caches = new ArrayList<Cache>();
 
     public Bus(Logger logger, int protocolType) {
         this.logger = logger;
@@ -45,8 +46,11 @@ public class Bus {
         return Globals.State.EXCLUSIVE;
     }
 
-    public void invalidateModifiedBlocks(int blockNumber) {
+    public void invalidateModifiedBlocks(int blockNumber, int ownerCache) {
         for (Cache cache : caches) {
+            if (cache.debugId == ownerCache) {
+                continue;
+            }
             int state = cache.getBlockState(blockNumber);
             if (state == Globals.State.SHARED) {
                 cache.changeState(blockNumber, Globals.State.INVALID);
@@ -54,11 +58,11 @@ public class Bus {
         }
     }
 
-    public int requestBlockForWrite(int blockNumber) {
+    public int requestBlockForWrite(int blockNumber, int processorId) {
         for (Cache cache : caches) {
             int state = cache.getBlockState(blockNumber);
             if (state == Globals.State.EXCLUSIVE || state == Globals.State.SHARED) {
-                invalidateModifiedBlocks(blockNumber);
+                invalidateModifiedBlocks(blockNumber, processorId);
                 logger.logCoherenceRequest(Globals.INVALIDATE_BLOCKS, cache.debugId);
                 return Globals.State.MODIFIED;
             } else if (state == Globals.State.MODIFIED) {

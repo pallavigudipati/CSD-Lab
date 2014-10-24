@@ -1,8 +1,8 @@
 public class Cache {
 
     public class CacheBlock {
-        // TODO: make state a private variable so that collection of stuff is easier.
         public int blockNumber = -1;
+
         private int state = Globals.State.INVALID;
 
         public void changeState(int state) {
@@ -17,8 +17,11 @@ public class Cache {
 
         public int initialize(int blockNumber, int state) {
             int oldState = Globals.State.INVALID;
-            if (this.isEmpty) {
+            if (!this.isEmpty) {
                 oldState = cacheBlock.state;
+                if (oldState != Globals.State.INVALID) {
+                    this.cacheBlock.changeState(Globals.State.INVALID);
+                }
             }
             this.isEmpty = false;
             this.cacheBlock.blockNumber = blockNumber;
@@ -30,7 +33,8 @@ public class Cache {
     public int debugId;
     public Bus bus;
     public Logger logger;
-    public CacheLine[] cacheLines = new CacheLine[Globals.cacheSize];
+
+    private CacheLine[] cacheLines = new CacheLine[Globals.cacheSize];
 
     public Cache(Logger logger, int debugId) {
         this.debugId = debugId;
@@ -43,9 +47,6 @@ public class Cache {
     public void insert(int blockNumber, int state) {
         int cacheLineNumber = Utils.getCacheLineNumber(blockNumber);
         int oldState = cacheLines[cacheLineNumber].initialize(blockNumber, state);
-        // if (oldState == Globals.State.MODIFIED) {
-            // Write back is done. 
-        // }
     }
 
     // Checks whether the processor can perform a read or write on it.
@@ -95,27 +96,33 @@ public class Cache {
     public void write(int blockNumber) {
         int oldState = getBlockState(blockNumber);
         // if MODIFIED,do nothing.
-        if (oldState == Globals.State.EXCLUSIVE) {
+        if (oldState == Globals.State.MODIFIED) {
+            return;
+        } else if (oldState == Globals.State.EXCLUSIVE) {
             changeState(blockNumber, Globals.State.MODIFIED);
+            return;
         } else if (oldState == Globals.State.SHARED) {
+            bus.invalidateModifiedBlocks(blockNumber, debugId);
             changeState(blockNumber, Globals.State.MODIFIED);
-            bus.invalidateModifiedBlocks(blockNumber);
             logger.logCoherenceRequest(Globals.INVALIDATE_BLOCKS, debugId);
+            return;
         } else if (oldState == Globals.State.OWNED) {
+            System.out.println("In write owned");
             // --------------------MOESI-----------------------
+            bus.invalidateModifiedBlocks(blockNumber, debugId);
             changeState(blockNumber, Globals.State.MODIFIED);
-            bus.invalidateModifiedBlocks(blockNumber);
             logger.logCoherenceRequest(Globals.INVALIDATE_BLOCKS, debugId);
+            return;
         }
         // The block is not present.
-        int newState = bus.requestBlockForWrite(blockNumber);
+        int newState = bus.requestBlockForWrite(blockNumber, debugId);
         if (newState == Globals.FAILED) {
             // Retry
-            newState = bus.requestBlockForWrite(blockNumber);
+            newState = bus.requestBlockForWrite(blockNumber, debugId);
             if (newState == Globals.FAILED) {
                 System.out.println("Something wrong in write");
             }
         }
-        changeState(blockNumber, newState);
+        insert(blockNumber, newState);
     }
 }

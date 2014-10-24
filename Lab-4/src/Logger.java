@@ -20,6 +20,7 @@ public class Logger {
     public void logStateChange(int oldState, int newState, int processorId) {
         HashMap<String, Integer> processorStatistics = statistics.get(processorId);
         String key = Utils.statesToString(oldState, newState);
+        // System.out.println(processorId + ": " + key);
         int oldCount = processorStatistics.containsKey(key) ? processorStatistics.get(key) : 0;
         processorStatistics.put(key, oldCount + 1);
     }

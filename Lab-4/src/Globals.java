@@ -8,7 +8,7 @@ public class Globals {
     public static int numProcessors = 2;
 
     // Iterations.
-    public static int numIterations = 100000;
+    public static int numIterations = 1000000;
 
     // Specifications.
     public static int cacheSize = 32; // In blocks.
