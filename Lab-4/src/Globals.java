@@ -6,7 +6,7 @@
 public class Globals {
 
     // Iterations.
-    public static int numIterations = 100;
+    public static int numIterations = 100000;
 
     // Specifications.
     public static int cacheSize = 32; // In blocks.
@@ -23,16 +23,22 @@ public class Globals {
         public static int OWNED = 5;
     }
 
+    // If a request fails.
+    public static int FAILED = 16;
+
+    // Protocol Types.
+    public static int MESI = 17;
+    public static int MOESI = 18;
+
     // Action: Read/Write
-    public static int READ = 10;
-    public static int WRITE = 11;
+    // public static int READ = 10;
+    // public static int WRITE = 11;
 
     // Source: Processor/Bus
-    public static int PROCESSOR = 12;
-    public static int BUS = 13;
+    // public static int PROCESSOR = 12;
+    // public static int BUS = 13;
 
     // Responses from the bus.
-    public static int COPY = 14;
-    public static int FRESH = 15;
-    public static int FAILED = 16;
+    // public static int COPY = 14;
+    // public static int FRESH = 15;
 }

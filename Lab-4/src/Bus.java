@@ -4,21 +4,61 @@ import java.util.List;
 
 public class Bus {
 
-    // List of all the processors listening.
-    List<Processor> processors = new ArrayList<Processor>();
+    // List of all the Caches listening.
+    public List<Cache> caches = new ArrayList<Cache>();
+    public int protocolType;
 
-    // TODO: Do the part where it receives the request and check if we have a local copy etc.
-    // Else fetch from main memory. Should give out COPY, FRESH or FAILED. In the case of failed 
-    // think, processor should retry the command again
+    public Bus(int protocolType) {
+        this.protocolType = protocolType;
+    }
 
-    public void notify(int blockNumber, int action) {
-        for (Processor processor : processors) {
-            processor.update(blockNumber, action);
+    public void addListener(Cache cache) {
+        caches.add(cache);
+        cache.bus = this;
+    }
+
+    public int requestBlockForRead(int blockNumber) {
+        for (Cache cache : caches) {
+            int state = cache.getBlockState(blockNumber);
+            if (state == Globals.State.EXCLUSIVE) {
+                cache.changeState(blockNumber, Globals.State.SHARED);
+                return Globals.State.SHARED;
+            } else if (state == Globals.State.SHARED) {
+                return Globals.State.SHARED;
+            } else if (state == Globals.State.MODIFIED) {
+                if (protocolType == Globals.MOESI) {
+                    // You can share dirty cache.
+                    // -------------------- MOESI ---------------------------
+                    cache.changeState(blockNumber, Globals.State.OWNED);
+                    return Globals.State.SHARED;
+                }
+                return Globals.FAILED;
+            }
+        }
+        return Globals.State.EXCLUSIVE;
+    }
+
+    public void invalidateModifiedBlocks(int blockNumber) {
+        for (Cache cache : caches) {
+            int state = cache.getBlockState(blockNumber);
+            if (state == Globals.State.SHARED) {
+                cache.changeState(blockNumber, Globals.State.INVALID);
+            }
         }
     }
 
-    public void addListener(Processor processor) {
-        processors.add(processor);
-        processor.bus = this;
+    public int requestBlockForWrite(int blockNumber) {
+        for (Cache cache : caches) {
+            int state = cache.getBlockState(blockNumber);
+            if (state == Globals.State.EXCLUSIVE || state == Globals.State.SHARED) {
+                invalidateModifiedBlocks(blockNumber);
+                return Globals.State.MODIFIED;
+            } else if (state == Globals.State.MODIFIED) {
+                // Write back to main memory
+                cache.changeState(blockNumber, Globals.State.INVALID);
+                return Globals.FAILED;
+            }
+        }
+        return Globals.State.MODIFIED;
     }
 }
